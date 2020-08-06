@@ -68,7 +68,12 @@ public enum EndClause implements Catalog<EndClause> {
     /**
      * {@code into} 句
      */
-    INTO(7, "into");
+    INTO(7, "into"),
+
+    /**
+     * {@code values} 句
+     */
+    VALUES(8, "values");
 
     /**
      * コード値
