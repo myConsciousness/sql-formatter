@@ -21,19 +21,34 @@ repositories {
 }
 
 dependencies {
-    // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
-
-    // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-
-    // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.8.Final'
+
+    compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 application {
-    // Define the main class for the application.
-    mainClassName = 'sql.formatter.App'
+    mainClassName = 'org.thinkit.formatter.EntrySqlFormatter'
+}
+
+run {
+    if (project.hasProperty('json')) {
+        args project.json
+    } else {
+        args "{\"demo1\":\"demo\",\"demo2\":\"demo\"}"
+    }
+
+    if (project.hasProperty('indentFactor')) {
+        args project.indentFactor
+    } else {
+        args "4"
+    }
 }
 
 test {
