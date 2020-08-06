@@ -78,8 +78,8 @@ public enum LogicalExpression implements Catalog<LogicalExpression> {
      */
     public static boolean contains(@NonNull String token) {
 
-        for (LogicalExpression clause : LogicalExpression.values()) {
-            if (clause.getExpression().equals(token)) {
+        for (LogicalExpression expression : LogicalExpression.values()) {
+            if (expression.getExpression().equals(token)) {
                 return true;
             }
         }

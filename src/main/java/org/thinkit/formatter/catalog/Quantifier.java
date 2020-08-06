@@ -78,8 +78,8 @@ public enum Quantifier implements Catalog<Quantifier> {
      */
     public static boolean contains(@NonNull String token) {
 
-        for (Quantifier clause : Quantifier.values()) {
-            if (clause.getQuantifier().equals(token)) {
+        for (Quantifier quantifier : Quantifier.values()) {
+            if (quantifier.getQuantifier().equals(token)) {
                 return true;
             }
         }
