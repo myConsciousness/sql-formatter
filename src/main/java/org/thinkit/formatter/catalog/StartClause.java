@@ -17,6 +17,7 @@ package org.thinkit.formatter.catalog;
 import org.thinkit.common.catalog.Catalog;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -70,4 +71,24 @@ public enum StartClause implements Catalog<StartClause> {
      */
     @Getter
     private final String clause;
+
+    /**
+     * 引数として渡された {@code token} に格納された文字列が {@link StartClause} に定義されているか判定します。
+     *
+     * @param token 判定対象のトークン
+     * @return 引数として渡された {@code token} に格納された文字列が {@link StartClause} に定義されている場合は
+     *         {@code true} 、それ以外は {@code false}
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
+    public static boolean contains(@NonNull String token) {
+
+        for (StartClause clause : StartClause.values()) {
+            if (clause.getClause().equals(token)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
