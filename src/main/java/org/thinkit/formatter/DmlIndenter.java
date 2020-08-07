@@ -45,7 +45,7 @@ final class DmlIndenter {
      */
     private DmlIndenter() {
         this.indentSpaces = Indentation.getIndentSpaces();
-        this.indentFactor = 1;
+        this.indentFactor = 0;
     }
 
     /**
@@ -55,7 +55,7 @@ final class DmlIndenter {
      */
     private DmlIndenter(int indent) {
         this.indentSpaces = Indentation.getIndentSpaces(indent);
-        this.indentFactor = 1;
+        this.indentFactor = 0;
     }
 
     /**
