@@ -39,7 +39,7 @@ run {
     if (project.hasProperty('sql')) {
         args project.sql
     } else {
-        args "UPDATE test SET test1 = 'test', test2 = 'test' WHERE test = test;"
+        args "select t.id, h.name, t.hoge from test t left outer join hoge h on t.id = h.id where name like '%hogehoge';"
     }
 
     if (project.hasProperty('indentFactor')) {
