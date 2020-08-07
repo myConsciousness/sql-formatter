@@ -28,8 +28,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.8.Final'
-
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
@@ -38,10 +36,10 @@ application {
 }
 
 run {
-    if (project.hasProperty('json')) {
-        args project.json
+    if (project.hasProperty('sql')) {
+        args project.sql
     } else {
-        args "{\"demo1\":\"demo\",\"demo2\":\"demo\"}"
+        args "UPDATE test SET test1 = 'test', test2 = 'test' WHERE test = test;"
     }
 
     if (project.hasProperty('indentFactor')) {
