@@ -53,7 +53,12 @@ public enum Quantifier implements Catalog<Quantifier> {
     /**
      * {@code some} 詞
      */
-    SOME(4, "some");
+    SOME(4, "some"),
+
+    /**
+     * {@code between} 詞
+     */
+    BETWEEN(5, "between");
 
     /**
      * コード値
