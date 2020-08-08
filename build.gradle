@@ -39,7 +39,7 @@ run {
     if (project.hasProperty('sql')) {
         args project.sql
     } else {
-        args "select t.id, h.name, t.hoge from test t left outer join hoge h on t.id = h.id where name like '%hogehoge' and test in ('test', 'test', 'test', 'test');"
+        args "select t.id, h.name, t.hoge from test t, test as hoge group by something desc left outer join hoge h on t.id = h.id and t.id = h.id where name like '%hogehoge' and test in ('test', 'test', 'test', 'test');"
     }
 
     if (project.hasProperty('indentFactor')) {
