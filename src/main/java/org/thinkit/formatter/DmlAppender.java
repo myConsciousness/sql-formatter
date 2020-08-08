@@ -1,6 +1,7 @@
 package org.thinkit.formatter;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 
 @EqualsAndHashCode
@@ -20,6 +21,12 @@ final class DmlAppender {
      * DMLインデンター
      */
     private DmlIndenter dmlIndenter;
+
+    /**
+     * 開始ライン
+     */
+    @Getter
+    private boolean beginLine;
 
     /**
      * デフォルトコンストラクタ
@@ -54,6 +61,16 @@ final class DmlAppender {
 
     public DmlAppender decrement() {
         this.dmlIndenter.decrement();
+        return this;
+    }
+
+    public DmlAppender toBeginLine() {
+        this.beginLine = true;
+        return this;
+    }
+
+    public DmlAppender toNotBeginLine() {
+        this.beginLine = false;
         return this;
     }
 
