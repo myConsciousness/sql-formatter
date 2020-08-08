@@ -152,8 +152,10 @@ final class DmlTokenizer {
      * @param token 判定対象のトークン
      * @return 引数として指定された {@code token} に格納された値に空白が含まれている場合は {@code true} 、それ以外は
      *         {@code false}
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private boolean isWhitespace(String token) {
+    private boolean isWhitespace(@NonNull String token) {
         return WHITESPACES.contains(token);
     }
 }
