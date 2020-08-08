@@ -53,7 +53,12 @@ public enum LogicalExpression implements Catalog<LogicalExpression> {
     /**
      * {@code end} 式
      */
-    END(4, "end");
+    END(4, "end"),
+
+    /**
+     * {@code case} 式
+     */
+    CASE(5, "case");
 
     /**
      * コード値
