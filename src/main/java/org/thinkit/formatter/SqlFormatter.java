@@ -66,9 +66,6 @@ public class SqlFormatter implements Formatter {
     @Override
     public String format(@NonNull final String sql) {
 
-        final StringBuilder formatted = new StringBuilder();
-
-        final DmlIndenter indenter = DmlIndenter.of();
         final FunctionFixer function = FunctionFixer.of();
         final ParenthesisFixer startParenthesis = ParenthesisFixer.of();
 
@@ -85,53 +82,52 @@ public class SqlFormatter implements Formatter {
 
             if (DmlStatement.contains(lowercaseToken)) {
 
-                formatted.append(token);
+                appender.appendToken();
 
                 if (DmlStatement.SELECT.getStatement().equals(lowercaseToken)) {
-                    formatted.append(indenter.increment().newline());
+                    appender.increment().appendNewLine();
                     startParenthesis.push();
                     afterByOrFromOrSelects.addLast(afterByOrSetOrFromOrSelect);
 
                     beginLine = true;
                     afterByOrSetOrFromOrSelect = true;
                 } else {
-                    indenter.increment();
+                    appender.increment();
                     beginLine = false;
 
                     if (DmlStatement.UPDATE.getStatement().equals(lowercaseToken)) {
-                        formatted.append(indenter.newline());
+                        appender.appendNewLine();
                         beginLine = true;
                     }
                 }
             } else if (StartClause.contains(lowercaseToken)) {
                 if (!inClauses) {
                     if (MiscStatement.ON.getStatement().equals(lastToken)) {
-                        indenter.decrement();
+                        appender.decrement();
                     }
 
-                    formatted.append(indenter.decrement().newline());
+                    appender.decrement().appendNewLine();
                 }
 
                 inClauses = true;
 
-                formatted.append(token);
+                appender.appendToken();
                 beginLine = false;
 
             } else if (EndClause.contains(lowercaseToken)) {
                 if (!inClauses) {
                     if (MiscStatement.ON.getStatement().equals(lastToken)) {
-                        indenter.decrement();
+                        appender.decrement();
                     }
 
-                    formatted.append(indenter.decrement().newline());
+                    appender.decrement().appendNewLine();
                 }
 
                 if (!EndClause.UNION.getClause().equals(lowercaseToken)) {
-                    indenter.increment();
+                    appender.increment();
                 }
 
-                formatted.append(token);
-                formatted.append(indenter.newline());
+                appender.appendToken().appendNewLine();
                 beginLine = true;
                 inClauses = false;
 
@@ -140,16 +136,13 @@ public class SqlFormatter implements Formatter {
                         || EndClause.FROM.getClause().equals(lowercaseToken);
 
             } else if (afterByOrSetOrFromOrSelect && Delimiter.comma().equals(token)) {
-                formatted.append(token);
-                formatted.append(indenter.newline());
+                appender.appendToken().appendNewLine();
                 beginLine = true;
             } else if (MiscStatement.ON.getStatement().equals(lowercaseToken)) {
-                formatted.append(indenter.increment().newline());
-                formatted.append(token);
+                appender.increment().appendNewLine().appendToken();
                 beginLine = false;
             } else if (MiscStatement.ON.getStatement().equals(lastToken) & Delimiter.comma().equals(token)) {
-                formatted.append(token);
-                formatted.append(indenter.decrement().newline());
+                appender.appendToken().decrement().appendNewLine();
                 beginLine = true;
                 afterByOrSetOrFromOrSelect = true;
             } else if ("(".equals(token)) {
@@ -161,13 +154,13 @@ public class SqlFormatter implements Formatter {
                 }
 
                 if (function.isInFunction()) {
-                    formatted.append(token);
+                    appender.appendToken();
                     beginLine = false;
                 } else {
-                    formatted.append(token);
+                    appender.appendToken();
 
                     if (!afterByOrSetOrFromOrSelect) {
-                        formatted.append(indenter.increment().newline());
+                        appender.increment().appendNewLine();
                         beginLine = true;
                     }
                 }
@@ -176,66 +169,64 @@ public class SqlFormatter implements Formatter {
                 startParenthesis.decrement();
 
                 if (startParenthesis.hasParenthesis()) {
-                    indenter.decrement();
+                    appender.decrement();
                     startParenthesis.pop();
                     afterByOrSetOrFromOrSelect = afterByOrFromOrSelects.removeLast();
                 }
 
                 if (function.isInFunction()) {
-                    function.decrement();
-                    formatted.append(token);
+                    appender.decrement().appendToken();
                 } else {
                     if (!afterByOrSetOrFromOrSelect) {
-                        formatted.append(indenter.decrement().newline());
+                        appender.decrement().appendNewLine();
                     }
 
-                    formatted.append(token);
+                    appender.appendToken();
                 }
 
                 beginLine = false;
 
             } else if (EndClause.VALUES.getClause().equals(lowercaseToken)) {
-                formatted.append(indenter.decrement().newline());
-                formatted.append(token);
-                formatted.append(indenter.increment().newline());
+                appender.decrement().appendNewLine();
+                appender.appendToken();
+                appender.increment().appendNewLine();
                 beginLine = true;
             } else if (LogicalExpression.contains(lowercaseToken)
                     && !LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
 
                 if (LogicalExpression.END.getExpression().equals(lowercaseToken)) {
-                    indenter.decrement();
+                    appender.decrement();
                 }
 
-                formatted.append(indenter.newline());
-                formatted.append(token);
-
+                appender.appendNewLine().appendToken();
                 beginLine = false;
+
             } else if (Quantifier.BETWEEN.getQuantifier().equals(lastToken)
                     && LogicalExpression.AND.getExpression().equals(lowercaseToken)) {
 
-                formatted.append(token);
+                appender.appendToken();
                 beginLine = false;
 
             } else if (this.isWhitespace(token)) {
                 if (!beginLine) {
-                    formatted.append(token);
+                    appender.appendToken();
                 }
             } else {
-                formatted.append(token);
+                appender.appendToken();
 
                 if (DmlStatement.INSERT.getStatement().equals(lastToken)) {
-                    formatted.append(indenter.newline());
+                    appender.appendNewLine();
                     beginLine = true;
                 } else {
                     beginLine = false;
                     if (LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
-                        indenter.increment();
+                        appender.increment();
                     }
                 }
             }
         }
 
-        return formatted.toString();
+        return appender.toString();
     }
 
     private boolean isFunctionName(@NonNull String token) {
