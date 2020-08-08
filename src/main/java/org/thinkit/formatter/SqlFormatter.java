@@ -15,6 +15,7 @@
 package org.thinkit.formatter;
 
 import org.thinkit.common.catalog.Delimiter;
+import org.thinkit.common.catalog.Parenthesis;
 import org.thinkit.formatter.catalog.DmlStatement;
 import org.thinkit.formatter.catalog.EndClause;
 import org.thinkit.formatter.catalog.LogicalExpression;
@@ -89,64 +90,22 @@ public class SqlFormatter implements Formatter {
                 this.afterOnStatement(appender, field);
             } else if (MiscStatement.ON.getStatement().equals(lowercaseToken)) {
                 this.onStatement(appender);
-            } else if ("(".equals(token)) {
+            } else if (Parenthesis.start().equals(token)) {
                 this.startParenthesis(appender, tokenizer, function, field, startParenthesis);
-            } else if (")".equals(token)) {
-
-                startParenthesis.decrement();
-
-                if (startParenthesis.hasParenthesis()) {
-                    appender.decrement();
-                    startParenthesis.pop();
-                    field.pop();
-                }
-
-                if (function.isInFunction()) {
-                    appender.decrement().appendToken();
-                } else {
-                    if (!field.isNewline()) {
-                        appender.decrement().appendNewLine();
-                    }
-
-                    appender.appendToken();
-                }
-
-                appender.toNotBeginLine();
-
+            } else if (Parenthesis.end().equals(token)) {
+                this.endParenthesis(appender, function, field, startParenthesis);
             } else if (EndClause.VALUES.getClause().equals(lowercaseToken)) {
-                appender.decrement().appendNewLine();
-                appender.appendToken();
-                appender.increment().appendNewLine();
-                appender.toBeginLine();
+                this.valuesClause(appender);
             } else if (LogicalExpression.contains(lowercaseToken)
                     && !LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
-
-                if (LogicalExpression.END.getExpression().equals(lowercaseToken)) {
-                    appender.decrement();
-                }
-
-                appender.toNotBeginLine().appendNewLine().appendToken();
-
+                this.logicalExceptCase(appender, tokenizer);
             } else if (Quantifier.BETWEEN.getQuantifier().equals(lastToken)
                     && LogicalExpression.AND.getExpression().equals(lowercaseToken)) {
-
-                appender.toNotBeginLine().appendToken();
-
+                this.logicalAfterBetween(appender);
             } else if (this.isWhitespace(token)) {
-                if (!appender.isBeginLine()) {
-                    appender.appendToken();
-                }
+                this.whitespace(appender);
             } else {
-                appender.appendToken();
-
-                if (DmlStatement.INSERT.getStatement().equals(lastToken)) {
-                    appender.toBeginLine().appendNewLine();
-                } else {
-                    appender.toNotBeginLine();
-                    if (LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
-                        appender.increment();
-                    }
-                }
+                this.otherStatements(appender, tokenizer);
             }
         }
 
@@ -236,6 +195,70 @@ public class SqlFormatter implements Formatter {
 
             if (!field.isNewline()) {
                 appender.toBeginLine().increment().appendNewLine();
+            }
+        }
+    }
+
+    private void endParenthesis(@NonNull DmlAppender appender, @NonNull FunctionFixer function,
+            @NonNull FieldFixer field, @NonNull ParenthesisFixer startParenthesis) {
+
+        startParenthesis.decrement();
+
+        if (startParenthesis.hasParenthesis()) {
+            appender.decrement();
+            startParenthesis.pop();
+            field.pop();
+        }
+
+        if (function.isInFunction()) {
+            appender.decrement().appendToken();
+        } else {
+            if (!field.isNewline()) {
+                appender.decrement().appendNewLine();
+            }
+
+            appender.appendToken();
+        }
+
+        appender.toNotBeginLine();
+    }
+
+    private void valuesClause(@NonNull DmlAppender appender) {
+        appender.decrement().appendNewLine();
+        appender.appendToken();
+        appender.increment().appendNewLine();
+        appender.toBeginLine();
+    }
+
+    private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
+
+        if (LogicalExpression.END.getExpression().equals(tokenizer.getLowercaseToken())) {
+            appender.decrement();
+        }
+
+        appender.toNotBeginLine().appendNewLine().appendToken();
+    }
+
+    private void logicalAfterBetween(@NonNull DmlAppender appender) {
+        appender.toNotBeginLine().appendToken();
+    }
+
+    private void whitespace(@NonNull DmlAppender appender) {
+        if (!appender.isBeginLine()) {
+            appender.appendToken();
+        }
+    }
+
+    private void otherStatements(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
+
+        appender.appendToken();
+
+        if (DmlStatement.INSERT.getStatement().equals(tokenizer.getLastToken())) {
+            appender.toBeginLine().appendNewLine();
+        } else {
+            appender.toNotBeginLine();
+            if (LogicalExpression.CASE.getExpression().equals(tokenizer.getLowercaseToken())) {
+                appender.increment();
             }
         }
     }
