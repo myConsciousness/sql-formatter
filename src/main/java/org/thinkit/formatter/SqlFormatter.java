@@ -184,7 +184,7 @@ public class SqlFormatter implements Formatter {
 
         startParenthesis.increment();
 
-        if (this.isFunctionName(tokenizer.getLastToken()) || function.isInFunction()) {
+        if (this.isFunction(tokenizer.getLastToken()) || function.isInFunction()) {
             function.increment();
         }
 
@@ -263,7 +263,7 @@ public class SqlFormatter implements Formatter {
         }
     }
 
-    private boolean isFunctionName(@NonNull String token) {
+    private boolean isFunction(@NonNull String token) {
 
         final char begin = token.charAt(0);
         final boolean isIdentifier = Character.isJavaIdentifierStart(begin) || '"' == begin;
