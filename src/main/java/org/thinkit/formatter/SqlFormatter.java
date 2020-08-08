@@ -69,7 +69,6 @@ public class SqlFormatter implements Formatter {
         final FunctionFixer function = FunctionFixer.of();
         final ParenthesisFixer startParenthesis = ParenthesisFixer.of();
 
-        boolean beginLine = false;
         boolean inClauses = false;
 
         final DmlTokenizer tokenizer = DmlTokenizer.of(sql);
@@ -85,19 +84,15 @@ public class SqlFormatter implements Formatter {
                 appender.appendToken();
 
                 if (DmlStatement.SELECT.getStatement().equals(lowercaseToken)) {
-                    appender.increment().appendNewLine();
+                    appender.toBeginLine().increment().appendNewLine();
                     startParenthesis.push();
                     afterByOrFromOrSelects.addLast(afterByOrSetOrFromOrSelect);
-
-                    beginLine = true;
                     afterByOrSetOrFromOrSelect = true;
                 } else {
-                    appender.increment();
-                    beginLine = false;
+                    appender.toNotBeginLine().increment();
 
                     if (DmlStatement.UPDATE.getStatement().equals(lowercaseToken)) {
-                        appender.appendNewLine();
-                        beginLine = true;
+                        appender.toBeginLine().appendNewLine();
                     }
                 }
             } else if (StartClause.contains(lowercaseToken)) {
@@ -110,9 +105,7 @@ public class SqlFormatter implements Formatter {
                 }
 
                 inClauses = true;
-
-                appender.appendToken();
-                beginLine = false;
+                appender.toNotBeginLine().appendToken();
 
             } else if (EndClause.contains(lowercaseToken)) {
                 if (!inClauses) {
@@ -127,8 +120,7 @@ public class SqlFormatter implements Formatter {
                     appender.increment();
                 }
 
-                appender.appendToken().appendNewLine();
-                beginLine = true;
+                appender.toBeginLine().appendToken().appendNewLine();
                 inClauses = false;
 
                 afterByOrSetOrFromOrSelect = EndClause.BY.getClause().equals(lowercaseToken)
@@ -136,14 +128,11 @@ public class SqlFormatter implements Formatter {
                         || EndClause.FROM.getClause().equals(lowercaseToken);
 
             } else if (afterByOrSetOrFromOrSelect && Delimiter.comma().equals(token)) {
-                appender.appendToken().appendNewLine();
-                beginLine = true;
+                appender.toBeginLine().appendToken().appendNewLine();
             } else if (MiscStatement.ON.getStatement().equals(lowercaseToken)) {
-                appender.increment().appendNewLine().appendToken();
-                beginLine = false;
+                appender.toNotBeginLine().increment().appendNewLine().appendToken();
             } else if (MiscStatement.ON.getStatement().equals(lastToken) & Delimiter.comma().equals(token)) {
-                appender.appendToken().decrement().appendNewLine();
-                beginLine = true;
+                appender.toBeginLine().appendToken().decrement().appendNewLine();
                 afterByOrSetOrFromOrSelect = true;
             } else if ("(".equals(token)) {
 
@@ -154,14 +143,12 @@ public class SqlFormatter implements Formatter {
                 }
 
                 if (function.isInFunction()) {
-                    appender.appendToken();
-                    beginLine = false;
+                    appender.toNotBeginLine().appendToken();
                 } else {
                     appender.appendToken();
 
                     if (!afterByOrSetOrFromOrSelect) {
-                        appender.increment().appendNewLine();
-                        beginLine = true;
+                        appender.toBeginLine().increment().appendNewLine();
                     }
                 }
             } else if (")".equals(token)) {
@@ -184,13 +171,13 @@ public class SqlFormatter implements Formatter {
                     appender.appendToken();
                 }
 
-                beginLine = false;
+                appender.toNotBeginLine();
 
             } else if (EndClause.VALUES.getClause().equals(lowercaseToken)) {
                 appender.decrement().appendNewLine();
                 appender.appendToken();
                 appender.increment().appendNewLine();
-                beginLine = true;
+                appender.toBeginLine();
             } else if (LogicalExpression.contains(lowercaseToken)
                     && !LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
 
@@ -198,27 +185,24 @@ public class SqlFormatter implements Formatter {
                     appender.decrement();
                 }
 
-                appender.appendNewLine().appendToken();
-                beginLine = false;
+                appender.toNotBeginLine().appendNewLine().appendToken();
 
             } else if (Quantifier.BETWEEN.getQuantifier().equals(lastToken)
                     && LogicalExpression.AND.getExpression().equals(lowercaseToken)) {
 
-                appender.appendToken();
-                beginLine = false;
+                appender.toNotBeginLine().appendToken();
 
             } else if (this.isWhitespace(token)) {
-                if (!beginLine) {
+                if (!appender.isBeginLine()) {
                     appender.appendToken();
                 }
             } else {
                 appender.appendToken();
 
                 if (DmlStatement.INSERT.getStatement().equals(lastToken)) {
-                    appender.appendNewLine();
-                    beginLine = true;
+                    appender.toBeginLine().appendNewLine();
                 } else {
-                    beginLine = false;
+                    appender.toNotBeginLine();
                     if (LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
                         appender.increment();
                     }
