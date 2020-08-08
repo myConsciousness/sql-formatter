@@ -31,19 +31,24 @@ import lombok.RequiredArgsConstructor;
 public enum DmlStatement implements Catalog<DmlStatement> {
 
     /**
-     * {@code insert} ステートメント
+     * {@code select} ステートメント
      */
-    INSERT(0, "insert"),
+    SELECT(0, "select"),
 
     /**
      * {@code insert} ステートメント
      */
-    UPDATE(1, "update"),
+    INSERT(1, "insert"),
 
     /**
      * {@code insert} ステートメント
      */
-    DELETE(2, "delete");
+    UPDATE(2, "update"),
+
+    /**
+     * {@code insert} ステートメント
+     */
+    DELETE(3, "delete");
 
     /**
      * コード値
