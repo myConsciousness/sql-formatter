@@ -14,8 +14,6 @@
 
 package org.thinkit.formatter;
 
-import java.util.LinkedList;
-
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.formatter.catalog.DmlStatement;
 import org.thinkit.formatter.catalog.EndClause;
@@ -45,9 +43,6 @@ public class SqlFormatter implements Formatter {
      */
     private static final String WHITESPACES = " \n\r\f\t";
 
-    boolean afterByOrSetOrFromOrSelect;
-    private LinkedList<Boolean> afterByOrFromOrSelects = new LinkedList<>();
-
     /**
      * デフォルトコンストラクタ
      */
@@ -67,6 +62,7 @@ public class SqlFormatter implements Formatter {
     public String format(@NonNull final String sql) {
 
         final FunctionFixer function = FunctionFixer.of();
+        final FieldFixer field = FieldFixer.of();
         final ParenthesisFixer startParenthesis = ParenthesisFixer.of();
 
         boolean inClauses = false;
@@ -80,77 +76,21 @@ public class SqlFormatter implements Formatter {
             String lastToken = tokenizer.getLastToken();
 
             if (DmlStatement.contains(lowercaseToken)) {
-
-                appender.appendToken();
-
-                if (DmlStatement.SELECT.getStatement().equals(lowercaseToken)) {
-                    appender.toBeginLine().increment().appendNewLine();
-                    startParenthesis.push();
-                    afterByOrFromOrSelects.addLast(afterByOrSetOrFromOrSelect);
-                    afterByOrSetOrFromOrSelect = true;
-                } else {
-                    appender.toNotBeginLine().increment();
-
-                    if (DmlStatement.UPDATE.getStatement().equals(lowercaseToken)) {
-                        appender.toBeginLine().appendNewLine();
-                    }
-                }
+                this.dmlStatement(appender, tokenizer, startParenthesis, field);
             } else if (StartClause.contains(lowercaseToken)) {
-                if (!inClauses) {
-                    if (MiscStatement.ON.getStatement().equals(lastToken)) {
-                        appender.decrement();
-                    }
-
-                    appender.decrement().appendNewLine();
-                }
-
+                this.startClause(appender, tokenizer, inClauses);
                 inClauses = true;
-                appender.toNotBeginLine().appendToken();
-
             } else if (EndClause.contains(lowercaseToken)) {
-                if (!inClauses) {
-                    if (MiscStatement.ON.getStatement().equals(lastToken)) {
-                        appender.decrement();
-                    }
-
-                    appender.decrement().appendNewLine();
-                }
-
-                if (!EndClause.UNION.getClause().equals(lowercaseToken)) {
-                    appender.increment();
-                }
-
-                appender.toBeginLine().appendToken().appendNewLine();
+                this.endClause(appender, tokenizer, field, inClauses);
                 inClauses = false;
-
-                afterByOrSetOrFromOrSelect = EndClause.BY.getClause().equals(lowercaseToken)
-                        || EndClause.SET.getClause().equals(lowercaseToken)
-                        || EndClause.FROM.getClause().equals(lowercaseToken);
-
-            } else if (afterByOrSetOrFromOrSelect && Delimiter.comma().equals(token)) {
+            } else if (field.isNewline() && Delimiter.comma().equals(token)) {
                 appender.toBeginLine().appendToken().appendNewLine();
-            } else if (MiscStatement.ON.getStatement().equals(lowercaseToken)) {
-                appender.toNotBeginLine().increment().appendNewLine().appendToken();
             } else if (MiscStatement.ON.getStatement().equals(lastToken) & Delimiter.comma().equals(token)) {
-                appender.toBeginLine().appendToken().decrement().appendNewLine();
-                afterByOrSetOrFromOrSelect = true;
+                this.afterOnStatement(appender, field);
+            } else if (MiscStatement.ON.getStatement().equals(lowercaseToken)) {
+                this.onStatement(appender);
             } else if ("(".equals(token)) {
-
-                startParenthesis.increment();
-
-                if (this.isFunctionName(lastToken) || function.isInFunction()) {
-                    function.increment();
-                }
-
-                if (function.isInFunction()) {
-                    appender.toNotBeginLine().appendToken();
-                } else {
-                    appender.appendToken();
-
-                    if (!afterByOrSetOrFromOrSelect) {
-                        appender.toBeginLine().increment().appendNewLine();
-                    }
-                }
+                this.startParenthesis(appender, tokenizer, function, field, startParenthesis);
             } else if (")".equals(token)) {
 
                 startParenthesis.decrement();
@@ -158,13 +98,13 @@ public class SqlFormatter implements Formatter {
                 if (startParenthesis.hasParenthesis()) {
                     appender.decrement();
                     startParenthesis.pop();
-                    afterByOrSetOrFromOrSelect = afterByOrFromOrSelects.removeLast();
+                    field.pop();
                 }
 
                 if (function.isInFunction()) {
                     appender.decrement().appendToken();
                 } else {
-                    if (!afterByOrSetOrFromOrSelect) {
+                    if (!field.isNewline()) {
                         appender.decrement().appendNewLine();
                     }
 
@@ -211,6 +151,93 @@ public class SqlFormatter implements Formatter {
         }
 
         return appender.toString();
+    }
+
+    private void dmlStatement(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer,
+            @NonNull ParenthesisFixer startParenthesis, @NonNull FieldFixer field) {
+
+        appender.appendToken();
+
+        if (DmlStatement.SELECT.getStatement().equals(tokenizer.getLowercaseToken())) {
+            appender.toBeginLine().increment().appendNewLine();
+            startParenthesis.push();
+            field.push().toNewline();
+        } else {
+            appender.toNotBeginLine().increment();
+
+            if (DmlStatement.UPDATE.getStatement().equals(tokenizer.getLowercaseToken())) {
+                appender.toBeginLine().appendNewLine();
+            }
+        }
+    }
+
+    private void startClause(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer, boolean inClauses) {
+
+        if (!inClauses) {
+            if (MiscStatement.ON.getStatement().equals(tokenizer.getLastToken())) {
+                appender.decrement();
+            }
+
+            appender.decrement().appendNewLine();
+        }
+
+        appender.toNotBeginLine().appendToken();
+    }
+
+    private void endClause(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer, @NonNull FieldFixer field,
+            boolean inClauses) {
+
+        if (!inClauses) {
+            if (MiscStatement.ON.getStatement().equals(tokenizer.getLastToken())) {
+                appender.decrement();
+            }
+
+            appender.decrement().appendNewLine();
+        }
+
+        final String lowercaseToken = tokenizer.getLowercaseToken();
+
+        if (!EndClause.UNION.getClause().equals(lowercaseToken)) {
+            appender.increment();
+        }
+
+        appender.toBeginLine().appendToken().appendNewLine();
+
+        if (EndClause.BY.getClause().equals(lowercaseToken) || EndClause.SET.getClause().equals(lowercaseToken)
+                || EndClause.FROM.getClause().equals(lowercaseToken)) {
+            field.toNewline();
+        } else {
+            field.toNotNewline();
+        }
+    }
+
+    private void onStatement(@NonNull DmlAppender appender) {
+        appender.toNotBeginLine().increment().appendNewLine().appendToken();
+    }
+
+    private void afterOnStatement(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
+        appender.toBeginLine().appendToken().decrement().appendNewLine();
+        field.toNewline();
+    }
+
+    private void startParenthesis(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer,
+            @NonNull FunctionFixer function, @NonNull FieldFixer field, @NonNull ParenthesisFixer startParenthesis) {
+
+        startParenthesis.increment();
+
+        if (this.isFunctionName(tokenizer.getLastToken()) || function.isInFunction()) {
+            function.increment();
+        }
+
+        if (function.isInFunction()) {
+            appender.toNotBeginLine().appendToken();
+        } else {
+            appender.appendToken();
+
+            if (!field.isNewline()) {
+                appender.toBeginLine().increment().appendNewLine();
+            }
+        }
     }
 
     private boolean isFunctionName(@NonNull String token) {
