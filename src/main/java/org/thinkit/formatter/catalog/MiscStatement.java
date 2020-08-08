@@ -31,14 +31,9 @@ import lombok.RequiredArgsConstructor;
 public enum MiscStatement implements Catalog<MiscStatement> {
 
     /**
-     * {@code select} ステートメント
-     */
-    SELECT(0, "select"),
-
-    /**
      * {@code on} ステートメント
      */
-    ON(1, "on");
+    ON(0, "on");
 
     /**
      * コード値
