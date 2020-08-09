@@ -16,7 +16,7 @@ package org.thinkit.formatter;
 
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.common.catalog.Parenthesis;
-import org.thinkit.formatter.catalog.DmlStatement;
+import org.thinkit.formatter.catalog.dml.DmlStatement;
 import org.thinkit.formatter.catalog.EndClause;
 import org.thinkit.formatter.catalog.LogicalExpression;
 import org.thinkit.formatter.catalog.MiscStatement;
@@ -45,9 +45,31 @@ public class SqlFormatter implements Formatter {
     private static final String WHITESPACES = " \n\r\f\t";
 
     /**
+     * インデント数
+     */
+    private int indent;
+
+    /**
      * デフォルトコンストラクタ
      */
     private SqlFormatter() {
+        indent = 4;
+    }
+
+    /**
+     * コンストラクタ
+     *
+     * @param indent インデント数
+     *
+     * @throws IllegalArgumentException 引数として渡された {@code indent} の数値が負数の場合
+     */
+    private SqlFormatter(int indent) {
+
+        if (indent < 0) {
+            throw new IllegalArgumentException("Indent must be positive.");
+        }
+
+        this.indent = indent;
     }
 
     /**
@@ -57,6 +79,18 @@ public class SqlFormatter implements Formatter {
      */
     public static Formatter of() {
         return new SqlFormatter();
+    }
+
+    /**
+     * 引数として指定されたインデント数に応じた {@link SqlFormatter} クラスの新しいインスタンスを生成し返却します。
+     *
+     * @param indent インデント数
+     * @return インデント数に応じた {@link SqlFormatter} クラスの新しいインスタンス
+     *
+     * @throws IllegalArgumentException 引数として渡された {@code indent} の数値が負数の場合
+     */
+    public static Formatter withIndent(int indent) {
+        return new SqlFormatter(indent);
     }
 
     @Override
