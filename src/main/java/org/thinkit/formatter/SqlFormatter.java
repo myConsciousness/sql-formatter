@@ -214,11 +214,30 @@ public class SqlFormatter implements Formatter {
         appender.toNotBeginLine().increment().appendNewLine().appendToken();
     }
 
+    /**
+     * トークンの登場位置が {@code "on"} 句以降の場合の処理を定義したメソッドです。
+     *
+     * @param appender DMLのアペンダー
+     * @param field    フィールドの調整オブジェクト
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void afterOnStatement(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
         appender.toBeginLine().appendToken().decrement().appendNewLine();
         field.toNewline();
     }
 
+    /**
+     * トークンが開始括弧の場合の処理を定義したメソッドです。
+     *
+     * @param appender         DMLのアペンダー
+     * @param tokenizer        DMLのトークナイザー
+     * @param function         関数の調整オブジェクト
+     * @param field            フィールドの調整オブジェクト
+     * @param startParenthesis 括弧の調整オブジェクト
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void startParenthesis(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer,
             @NonNull FunctionFixer function, @NonNull FieldFixer field, @NonNull ParenthesisFixer startParenthesis) {
 
@@ -239,6 +258,16 @@ public class SqlFormatter implements Formatter {
         }
     }
 
+    /**
+     * トークンが終了括弧の場合の処理を定義したメソッドです。
+     *
+     * @param appender         DMLのアペンダー
+     * @param function         関数の調整オブジェクト
+     * @param field            フィールドの調整オブジェクト
+     * @param startParenthesis 括弧の調整オブジェクト
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void endParenthesis(@NonNull DmlAppender appender, @NonNull FunctionFixer function,
             @NonNull FieldFixer field, @NonNull ParenthesisFixer startParenthesis) {
 
@@ -263,6 +292,13 @@ public class SqlFormatter implements Formatter {
         appender.toNotBeginLine();
     }
 
+    /**
+     * トークンが {@code "values"} 句の場合の処理を定義したメソッドです。
+     *
+     * @param appender DMLアペンダー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void valuesClause(@NonNull DmlAppender appender) {
         appender.decrement().appendNewLine();
         appender.appendToken();
@@ -270,6 +306,14 @@ public class SqlFormatter implements Formatter {
         appender.toBeginLine();
     }
 
+    /**
+     * トークンが {@code "case"} 以外の論理式である場合の処理を定義したメソッドです。
+     *
+     * @param appender  DMLのアペンダー
+     * @param tokenizer DMLのトークナイザー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
 
         if (LogicalExpression.END.getExpression().equals(tokenizer.getLowercaseToken())) {
@@ -279,16 +323,38 @@ public class SqlFormatter implements Formatter {
         appender.toNotBeginLine().appendNewLine().appendToken();
     }
 
+    /**
+     * トークンの登場位置が {@code "between"} 句よりも後である場合の処理を定義したメソッドです。
+     *
+     * @param appender DMLのアペンダー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void logicalAfterBetween(@NonNull DmlAppender appender) {
         appender.toNotBeginLine().appendToken();
     }
 
+    /**
+     * トークンが空白である場合の処理を定義したメソッドです。
+     *
+     * @param appender DMLのアペンダー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void whitespace(@NonNull DmlAppender appender) {
         if (!appender.isBeginLine()) {
             appender.appendToken();
         }
     }
 
+    /**
+     * トークンがその他のステートメントであった場合の所為を定義したメソッドです。
+     *
+     * @param appender  DMLのアペンダー
+     * @param tokenizer DMLのトークナイザー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void otherStatements(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
 
         appender.appendToken();
@@ -303,20 +369,43 @@ public class SqlFormatter implements Formatter {
         }
     }
 
+    /**
+     * {@code ","} までのフィールド項目に対する処理を定義したメソッドです。
+     *
+     * @param appender DMLのアペンダー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void fieldItem(@NonNull DmlAppender appender) {
         appender.toBeginLine().appendToken().appendNewLine();
     }
 
+    /**
+     * 引数として渡された {@code token} の文字列が空白であるか判定します。
+     *
+     * @param token 判定対象のトークン
+     * @return {@code token} の文字列が空白である場合は {@code true} 、それ以外は {@code false}
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
+    private boolean isWhitespace(@NonNull String token) {
+        return WHITESPACES.contains(token);
+    }
+
+    /**
+     * 引数として渡された {@code token} の文字列が関数名であるか判定します。
+     *
+     * @param token 判定対象のトークン
+     * @return {@code token} の文字列が関数名である場合は {@code true} 、それ以外は {@code false}
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private boolean isFunction(@NonNull String token) {
 
-        final char begin = token.charAt(0);
-        final boolean isIdentifier = Character.isJavaIdentifierStart(begin) || '"' == begin;
+        final char start = token.charAt(0);
+        final boolean isIdentifier = Character.isJavaIdentifierStart(start) || '"' == start;
 
         return isIdentifier && !LogicalExpression.contains(token) && !EndClause.contains(token)
                 && !Quantifier.contains(token) && !DmlStatement.contains(token) && !MiscStatement.contains(token);
-    }
-
-    private boolean isWhitespace(@NonNull String token) {
-        return WHITESPACES.contains(token);
     }
 }
