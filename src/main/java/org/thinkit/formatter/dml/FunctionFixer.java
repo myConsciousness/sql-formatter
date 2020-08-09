@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.thinkit.formatter;
+package org.thinkit.formatter.dml;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

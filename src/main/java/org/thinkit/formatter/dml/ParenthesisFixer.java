@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.thinkit.formatter;
+package org.thinkit.formatter.dml;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

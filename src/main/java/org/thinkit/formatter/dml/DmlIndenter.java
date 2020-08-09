@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.thinkit.formatter;
+package org.thinkit.formatter.dml;
 
 import org.thinkit.common.catalog.Indentation;
 
