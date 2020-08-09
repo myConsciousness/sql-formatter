@@ -145,7 +145,7 @@ public class SqlFormatter implements Formatter {
      *
      * @param appender  DML命令のアペンダー
      * @param tokenizer DML命令のトークナイザー
-     * @param inClauses 開始句以降かつ終了句までにあるトークンかの可否。 トークンの登場位置が {@link StartClause}
+     * @param inClauses 開始句以降かつ終了句までにあるトークンかの可否。トークンの登場位置が {@link StartClause}
      *                  クラスに定義されている要素の後で、かつ {@link EndClause} クラスに定義された要素よりも前の場合は
      *                  {@code true} を指定し、 そうでない場合は {@code false} を指定する。
      *
@@ -170,7 +170,7 @@ public class SqlFormatter implements Formatter {
      * @param appender  DML命令のアペンダー
      * @param tokenizer DML命令のトークナイザー
      * @param field     フィールドの調整オブジェクト
-     * @param inClauses 開始句以降かつ終了句までにあるトークンかの可否。 トークンの登場位置が {@link StartClause}
+     * @param inClauses 開始句以降かつ終了句までにあるトークンかの可否。トークンの登場位置が {@link StartClause}
      *                  クラスに定義されている要素の後で、かつ {@link EndClause} クラスに定義された要素よりも前の場合は
      *                  {@code true} を指定し、 そうでない場合は {@code false} を指定する。
      *
