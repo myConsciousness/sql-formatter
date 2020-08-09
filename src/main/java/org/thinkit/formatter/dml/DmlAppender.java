@@ -18,6 +18,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 
+/**
+ * {@link DmlTokenizer} クラスと連動してDMLクエリを生成するアペンダークラスです。
+ * <p>
+ * 生成した文字列は {@link #toString()} メソッドを使用することで取得することができます。
+ *
+ * @author Kato Shinya
+ * @since 1.0
+ * @version 1.0
+ */
 @EqualsAndHashCode
 final class DmlAppender {
 
@@ -48,6 +57,13 @@ final class DmlAppender {
     private DmlAppender() {
     }
 
+    /**
+     * コンストラクタ
+     *
+     * @param dmlTokenizer DMLのトークナイザー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private DmlAppender(@NonNull DmlTokenizer dmlTokenizer) {
         this.sql = new StringBuilder();
         this.dmlTokenizer = dmlTokenizer;
