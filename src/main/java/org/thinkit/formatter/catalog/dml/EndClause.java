@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.thinkit.formatter.catalog;
+package org.thinkit.formatter.catalog.dml;
 
 import org.thinkit.common.catalog.Catalog;
 
