@@ -16,11 +16,11 @@ package org.thinkit.formatter.dml;
 
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.common.catalog.Parenthesis;
-import org.thinkit.formatter.catalog.EndClause;
-import org.thinkit.formatter.catalog.LogicalExpression;
-import org.thinkit.formatter.catalog.MiscStatement;
-import org.thinkit.formatter.catalog.Quantifier;
-import org.thinkit.formatter.catalog.StartClause;
+import org.thinkit.formatter.catalog.dml.EndClause;
+import org.thinkit.formatter.catalog.dml.LogicalExpression;
+import org.thinkit.formatter.catalog.dml.MiscStatement;
+import org.thinkit.formatter.catalog.dml.Quantifier;
+import org.thinkit.formatter.catalog.dml.StartClause;
 import org.thinkit.formatter.catalog.dml.DmlStatement;
 import org.thinkit.formatter.common.Formatter;
 
