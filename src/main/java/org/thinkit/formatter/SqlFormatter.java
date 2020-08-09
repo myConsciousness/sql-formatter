@@ -85,7 +85,7 @@ public class SqlFormatter implements Formatter {
                 this.endClause(appender, tokenizer, field, inClauses);
                 inClauses = false;
             } else if (field.isNewline() && Delimiter.comma().equals(token)) {
-                appender.toBeginLine().appendToken().appendNewLine();
+                this.fieldItem(appender);
             } else if (MiscStatement.ON.getStatement().equals(lastToken) & Delimiter.comma().equals(token)) {
                 this.afterOnStatement(appender, field);
             } else if (MiscStatement.ON.getStatement().equals(lowercaseToken)) {
@@ -112,6 +112,16 @@ public class SqlFormatter implements Formatter {
         return appender.toString();
     }
 
+    /**
+     * トークンがDML命令の場合の処理を定義したメソッドです。
+     *
+     * @param appender         DML命令のアペンダー
+     * @param tokenizer        DML命令のトークナイザ
+     * @param startParenthesis 括弧の調整オブジェクト
+     * @param field            フィールドの調整オブジェクト
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void dmlStatement(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer,
             @NonNull ParenthesisFixer startParenthesis, @NonNull FieldFixer field) {
 
@@ -130,6 +140,17 @@ public class SqlFormatter implements Formatter {
         }
     }
 
+    /**
+     * トークンが開始句の場合の処理を定義したメソッドです。
+     *
+     * @param appender  DML命令のアペンダー
+     * @param tokenizer DML命令のトークナイザー
+     * @param inClauses 開始句以降かつ終了句までにあるトークンかの可否。 トークンの登場位置が {@link StartClause}
+     *                  クラスに定義されている要素の後で、かつ {@link EndClause} クラスに定義された要素よりも前の場合は
+     *                  {@code true} を指定し、 そうでない場合は {@code false} を指定する。
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void startClause(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer, boolean inClauses) {
 
         if (!inClauses) {
@@ -143,6 +164,18 @@ public class SqlFormatter implements Formatter {
         appender.toNotBeginLine().appendToken();
     }
 
+    /**
+     * トークンが終了句の場合の処理を定義したメソッドです。
+     *
+     * @param appender  DML命令のアペンダー
+     * @param tokenizer DML命令のトークナイザー
+     * @param field     フィールドの調整オブジェクト
+     * @param inClauses 開始句以降かつ終了句までにあるトークンかの可否。 トークンの登場位置が {@link StartClause}
+     *                  クラスに定義されている要素の後で、かつ {@link EndClause} クラスに定義された要素よりも前の場合は
+     *                  {@code true} を指定し、 そうでない場合は {@code false} を指定する。
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void endClause(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer, @NonNull FieldFixer field,
             boolean inClauses) {
 
@@ -170,6 +203,13 @@ public class SqlFormatter implements Formatter {
         }
     }
 
+    /**
+     * トークンが {@code "on"} 句の場合の処理を定義したメソッドです。
+     *
+     * @param appender DMLのアペンダー
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     private void onStatement(@NonNull DmlAppender appender) {
         appender.toNotBeginLine().increment().appendNewLine().appendToken();
     }
@@ -261,6 +301,10 @@ public class SqlFormatter implements Formatter {
                 appender.increment();
             }
         }
+    }
+
+    private void fieldItem(@NonNull DmlAppender appender) {
+        appender.toBeginLine().appendToken().appendNewLine();
     }
 
     private boolean isFunction(@NonNull String token) {
