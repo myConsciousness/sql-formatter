@@ -70,35 +70,92 @@ final class DmlAppender {
         this.dmlIndenter = DmlIndenter.of();
     }
 
+    /**
+     * 連動する {@link DmlTokenizer} クラスを登録した {@link DmlAppender}
+     * クラスの新しいインスタンスを生成し返却します。
+     *
+     * @param dmlTokenizer {@link DmlAppender} クラスと連動するDMLのトークナイザー
+     * @return {@link DmlAppender} クラスの新しいインスタンス
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
     public static DmlAppender register(@NonNull DmlTokenizer dmlTokenizer) {
         return new DmlAppender(dmlTokenizer);
     }
 
+    /**
+     * 登録したトークナイザーから現在位置のトークンを取得し文字列へ追加します。
+     * <p>
+     * この {@link DmlAppender#appendToken()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
     public DmlAppender appendToken() {
         this.sql.append(this.dmlTokenizer.getToken());
         return this;
     }
 
+    /**
+     * {@link DmlIndenter} クラスから改行コードを取得し文字列へ追加します。
+     * <p>
+     * この {@link DmlAppender#appendNewLine()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
     public DmlAppender appendNewLine() {
         this.sql.append(this.dmlIndenter.newline());
         return this;
     }
 
+    /**
+     * {@link DmlIndenter} クラスをインクリメントします。
+     * <p>
+     * この {@link DmlAppender#increment()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
     public DmlAppender increment() {
         this.dmlIndenter.increment();
         return this;
     }
 
+    /**
+     * {@link DmlIndenter} クラスをデクリメントします。
+     * <p>
+     * この {@link DmlAppender#decrement()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
     public DmlAppender decrement() {
         this.dmlIndenter.decrement();
         return this;
     }
 
+    /**
+     * 開始ライン可否を {@code true} へ上書きします。
+     * <p>
+     * この {@link DmlAppender#toBeginLine()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
     public DmlAppender toBeginLine() {
         this.beginLine = true;
         return this;
     }
 
+    /**
+     * 開始ライン可否を {@code false} へ上書きします。
+     * <p>
+     * この {@link DmlAppender#toBegitoNotBeginLinenLine()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
     public DmlAppender toNotBeginLine() {
         this.beginLine = false;
         return this;
