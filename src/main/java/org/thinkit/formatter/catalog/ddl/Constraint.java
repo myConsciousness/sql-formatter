@@ -32,7 +32,12 @@ public enum Constraint implements Catalog<Constraint> {
     /**
      * {@code foreign} 制約
      */
-    FOREIGN(0, "foreign");
+    FOREIGN(0, "foreign"),
+
+    /**
+     * {@code references} 制約
+     */
+    REFERENCES(1, "references");
 
     /**
      * コード値
