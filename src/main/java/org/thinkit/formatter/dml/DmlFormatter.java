@@ -14,14 +14,16 @@
 
 package org.thinkit.formatter.dml;
 
+import org.thinkit.common.Precondition;
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.common.catalog.Parenthesis;
+import org.thinkit.formatter.SqlFormatter;
+import org.thinkit.formatter.catalog.dml.DmlStatement;
 import org.thinkit.formatter.catalog.dml.EndClause;
 import org.thinkit.formatter.catalog.dml.LogicalExpression;
 import org.thinkit.formatter.catalog.dml.MiscStatement;
 import org.thinkit.formatter.catalog.dml.Quantifier;
 import org.thinkit.formatter.catalog.dml.StartClause;
-import org.thinkit.formatter.catalog.dml.DmlStatement;
 import org.thinkit.formatter.common.Formatter;
 
 import lombok.EqualsAndHashCode;
@@ -64,11 +66,7 @@ public final class DmlFormatter implements Formatter {
      * @throws IllegalArgumentException 引数として渡された {@code indent} の数値が負数の場合
      */
     private DmlFormatter(int indent) {
-
-        if (indent < 0) {
-            throw new IllegalArgumentException("Indent must be positive.");
-        }
-
+        Precondition.requirePositive(indent);
         this.indent = indent;
     }
 
