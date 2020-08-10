@@ -30,9 +30,9 @@ import lombok.RequiredArgsConstructor;
 public enum DdlStatement implements Catalog<DdlStatement> {
 
     /**
-     * {@code create} ステートメント
+     * {@code create database} ステートメント
      */
-    CREATE(0, "create"),
+    CREATE_DATABASE(0, "create database"),
 
     /**
      * {@code create table} ステートメント
