@@ -73,7 +73,12 @@ public enum EndClause implements Catalog<EndClause> {
     /**
      * {@code values} 句
      */
-    VALUES(8, "values");
+    VALUES(8, "values"),
+
+    /**
+     * {@code on} 句
+     */
+    ON(9, "on");
 
     /**
      * コード値
