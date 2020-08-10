@@ -30,24 +30,19 @@ import lombok.RequiredArgsConstructor;
 public enum DdlStatement implements Catalog<DdlStatement> {
 
     /**
-     * {@code create database} ステートメント
-     */
-    CREATE_DATABASE(0, "create database"),
-
-    /**
      * {@code create table} ステートメント
      */
-    CREATE_TABLE(1, "create table"),
+    CREATE_TABLE(0, "create table"),
 
     /**
      * {@code alter table} ステートメント
      */
-    ALTER_TABLE(2, "alter table"),
+    ALTER_TABLE(1, "alter table"),
 
     /**
      * {@code comment on} ステートメント
      */
-    COMMENT_ON(3, "comment on");
+    COMMENT_ON(2, "comment on");
 
     /**
      * コード値
