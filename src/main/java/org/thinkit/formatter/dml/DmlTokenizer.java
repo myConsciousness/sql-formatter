@@ -14,6 +14,7 @@
 
 package org.thinkit.formatter.dml;
 
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import lombok.EqualsAndHashCode;
@@ -136,7 +137,7 @@ final class DmlTokenizer {
         }
 
         this.token = sb.toString();
-        this.lowercaseToken = token.toLowerCase();
+        this.lowercaseToken = token.toLowerCase(Locale.ROOT);
 
         if (!this.isWhitespace(this.lowercaseToken)) {
             this.lastToken = this.lowercaseToken;
