@@ -21,7 +21,6 @@ import org.thinkit.formatter.SqlFormatter;
 import org.thinkit.formatter.catalog.dml.DmlStatement;
 import org.thinkit.formatter.catalog.dml.EndClause;
 import org.thinkit.formatter.catalog.dml.LogicalExpression;
-import org.thinkit.formatter.catalog.dml.MiscStatement;
 import org.thinkit.formatter.catalog.dml.Quantifier;
 import org.thinkit.formatter.catalog.dml.StartClause;
 import org.thinkit.formatter.common.Formatter;
@@ -113,15 +112,15 @@ public final class DmlFormatter implements Formatter {
             } else if (StartClause.contains(lowercaseToken)) {
                 this.startClause(appender, tokenizer, inClauses);
                 inClauses = true;
+            } else if (EndClause.ON.getClause().equals(lastToken) & Delimiter.comma().equals(token)) {
+                this.afterOnStatement(appender, field);
+            } else if (EndClause.ON.getClause().equals(lowercaseToken)) {
+                this.onStatement(appender);
             } else if (EndClause.contains(lowercaseToken)) {
                 this.endClause(appender, tokenizer, field, inClauses);
                 inClauses = false;
             } else if (field.isNewline() && Delimiter.comma().equals(token)) {
                 this.fieldItem(appender);
-            } else if (MiscStatement.ON.getStatement().equals(lastToken) & Delimiter.comma().equals(token)) {
-                this.afterOnStatement(appender, field);
-            } else if (MiscStatement.ON.getStatement().equals(lowercaseToken)) {
-                this.onStatement(appender);
             } else if (Parenthesis.start().equals(token)) {
                 this.startParenthesis(appender, tokenizer, function, field, startParenthesis);
             } else if (Parenthesis.end().equals(token)) {
@@ -186,7 +185,7 @@ public final class DmlFormatter implements Formatter {
     private void startClause(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer, boolean inClauses) {
 
         if (!inClauses) {
-            if (MiscStatement.ON.getStatement().equals(tokenizer.getLastToken())) {
+            if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
                 appender.decrement();
             }
 
@@ -212,7 +211,7 @@ public final class DmlFormatter implements Formatter {
             boolean inClauses) {
 
         if (!inClauses) {
-            if (MiscStatement.ON.getStatement().equals(tokenizer.getLastToken())) {
+            if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
                 appender.decrement();
             }
 
@@ -438,6 +437,6 @@ public final class DmlFormatter implements Formatter {
         final boolean isIdentifier = Character.isJavaIdentifierStart(start) || '"' == start;
 
         return isIdentifier && !LogicalExpression.contains(token) && !EndClause.contains(token)
-                && !Quantifier.contains(token) && !DmlStatement.contains(token) && !MiscStatement.contains(token);
+                && !Quantifier.contains(token) && !DmlStatement.contains(token);
     }
 }
