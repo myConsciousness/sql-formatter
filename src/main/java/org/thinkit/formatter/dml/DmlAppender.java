@@ -57,14 +57,31 @@ final class DmlAppender {
     private DmlAppender() {
     }
 
+    /**
+     * {@link DmlAppender} クラスの新しいインスタンスを生成し返却します。
+     *
+     * @return {@link DmlAppender} クラスの新しいインスタンス
+     */
     private static DmlAppender of() {
         return new DmlAppender();
     }
 
+    /**
+     * {@link DmlAppender} クラスのインスタンスを生成する {@link Builder} クラスの新しいインスタンスを生成し返却します。
+     *
+     * @return {@link Builder} クラスの新しいインスタンス
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * {@link DmlAppender} クラスのインスタンスを生成する処理を定義したビルダークラスです。
+     *
+     * @author Kato Shinya
+     * @since 1.0
+     * @version 1.0
+     */
     public static class Builder {
 
         /**
