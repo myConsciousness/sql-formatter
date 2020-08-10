@@ -80,7 +80,7 @@ final class DmlTokenizer {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     private DmlTokenizer(@NonNull String sql) {
-        this.tokenizer = new StringTokenizer(sql, TOKEN_DELIMITER, true);
+        this.tokenizer = new StringTokenizer(sql.trim(), TOKEN_DELIMITER, true);
     }
 
     /**
@@ -93,7 +93,7 @@ final class DmlTokenizer {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     public static DmlTokenizer of(@NonNull String sql) {
-        return new DmlTokenizer(sql.trim());
+        return new DmlTokenizer(sql);
     }
 
     /**
