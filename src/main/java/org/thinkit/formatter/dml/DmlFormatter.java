@@ -100,7 +100,7 @@ public final class DmlFormatter implements Formatter {
 
         boolean inClauses = false;
 
-        final DmlTokenizer tokenizer = DmlTokenizer.of(sql);
+        final DmlTokenizer tokenizer = DmlTokenizer.of(sql.trim());
         final DmlAppender appender = DmlAppender.builder().register(tokenizer).withIndent(this.indent).build();
 
         while (tokenizer.next()) {
