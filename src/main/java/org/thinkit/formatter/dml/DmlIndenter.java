@@ -73,7 +73,7 @@ final class DmlIndenter {
      * @param indent インデント数
      * @return {@link DmlIndenter} クラスの新しいインスタンス
      */
-    public static DmlIndenter ofIndent(int indent) {
+    public static DmlIndenter of(int indent) {
         return new DmlIndenter(indent);
     }
 

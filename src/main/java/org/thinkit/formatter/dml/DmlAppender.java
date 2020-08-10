@@ -57,30 +57,64 @@ final class DmlAppender {
     private DmlAppender() {
     }
 
-    /**
-     * コンストラクタ
-     *
-     * @param dmlTokenizer DMLのトークナイザー
-     *
-     * @exception NullPointerException 引数として {@code null} が渡された場合
-     */
-    private DmlAppender(@NonNull DmlTokenizer dmlTokenizer) {
-        this.sql = new StringBuilder();
-        this.dmlTokenizer = dmlTokenizer;
-        this.dmlIndenter = DmlIndenter.of();
+    private static DmlAppender of() {
+        return new DmlAppender();
     }
 
-    /**
-     * 連動する {@link DmlTokenizer} クラスを登録した {@link DmlAppender}
-     * クラスの新しいインスタンスを生成し返却します。
-     *
-     * @param dmlTokenizer {@link DmlAppender} クラスと連動するDMLのトークナイザー
-     * @return {@link DmlAppender} クラスの新しいインスタンス
-     *
-     * @exception NullPointerException 引数として {@code null} が渡された場合
-     */
-    public static DmlAppender register(@NonNull DmlTokenizer dmlTokenizer) {
-        return new DmlAppender(dmlTokenizer);
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        /**
+         * DMLトークナイザ
+         */
+        private DmlTokenizer dmlTokenizer;
+
+        /**
+         * インデント数
+         */
+        private int indent = 4;
+
+        /**
+         * デフォルトコンストラクタ
+         */
+        private Builder() {
+        }
+
+        /**
+         * 連動する {@link DmlTokenizer} クラスを登録した {@link DmlAppender} クラスに登録します。
+         *
+         * @param dmlTokenizer {@link DmlAppender} クラスと連動するDMLのトークナイザー
+         *
+         * @exception NullPointerException 引数として {@code null} が渡された場合
+         */
+        public Builder register(@NonNull DmlTokenizer dmlTokenizer) {
+            this.dmlTokenizer = dmlTokenizer;
+            return this;
+        }
+
+        /**
+         * インデント数を設定します。
+         *
+         * @param indent インデント数
+         *
+         * @exception NullPointerException 引数として {@code null} が渡された場合
+         */
+        public Builder withIndent(int indent) {
+            this.indent = indent;
+            return this;
+        }
+
+        public DmlAppender build() {
+            final DmlAppender appender = DmlAppender.of();
+            appender.sql = new StringBuilder();
+            appender.dmlTokenizer = this.dmlTokenizer;
+            appender.dmlIndenter = DmlIndenter.of(this.indent);
+            appender.beginLine = false;
+            return appender;
+        }
     }
 
     /**
