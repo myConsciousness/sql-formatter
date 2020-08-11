@@ -21,44 +21,24 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * DDL命令の句を管理するカタログです。
+ * DDL命令の終了句を管理するカタログです。
  *
  * @author Kato Shinya
  * @since 1.0
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum Clause implements Catalog<Clause> {
-
-    /**
-     * {@code add} 句
-     */
-    ADD(0, "add"),
+public enum EndClause implements Catalog<EndClause> {
 
     /**
      * {@code on} 句
      */
-    ON(1, "on"),
-
-    /**
-     * {@code column} 句
-     */
-    COLUMN(2, "column"),
-
-    /**
-     * {@code modify} 句
-     */
-    MODIFY(3, "modify"),
+    ON(0, "on"),
 
     /**
      * {@code change} 句
      */
-    CHANGE(4, "change"),
-
-    /**
-     * {@code rename} 句
-     */
-    RENAME(5, "rename");
+    CHANGE(1, "change");
 
     /**
      * コード値
@@ -73,17 +53,17 @@ public enum Clause implements Catalog<Clause> {
     private final String clause;
 
     /**
-     * 引数として渡された {@code token} に格納された文字列が {@link Clause} に定義されているか判定します。
+     * 引数として渡された {@code token} に格納された文字列が {@link EndClause} に定義されているか判定します。
      *
      * @param token 判定対象のトークン
-     * @return 引数として渡された {@code token} に格納された文字列が {@link Clause} に定義されている場合は
+     * @return 引数として渡された {@code token} に格納された文字列が {@link EndClause} に定義されている場合は
      *         {@code true} 、それ以外は {@code false}
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     public static boolean contains(@NonNull String token) {
 
-        for (Clause clause : Clause.values()) {
+        for (EndClause clause : EndClause.values()) {
             if (clause.getClause().equals(token)) {
                 return true;
             }
