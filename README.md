@@ -53,7 +53,7 @@ left outer join
         );
 ```
 
-If you want to specify an arbitrary number of indents, create an instance of `SqlFormatter.java` as shown below.
+If you want to specify an arbitrary number of indents, create an instance with `withIndent(int)` constructor as shown below.
 
 ```java
 String formattedSql = SqlFormatter.withIndent(indent).format(sql);
