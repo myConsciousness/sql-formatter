@@ -17,6 +17,7 @@ package org.thinkit.formatter.catalog.ddl;
 import org.thinkit.common.catalog.Catalog;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -50,4 +51,24 @@ public enum Constraint implements Catalog<Constraint> {
      */
     @Getter
     private final String constraint;
+
+    /**
+     * 引数として渡された {@code token} に格納された文字列が {@link Constraint} に定義されているか判定します。
+     *
+     * @param token 判定対象のトークン
+     * @return 引数として渡された {@code token} に格納された文字列が {@link Constraint} に定義されている場合は
+     *         {@code true} 、それ以外は {@code false}
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
+    public static boolean contains(@NonNull String token) {
+
+        for (Constraint constraint : Constraint.values()) {
+            if (constraint.getConstraint().equals(token)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

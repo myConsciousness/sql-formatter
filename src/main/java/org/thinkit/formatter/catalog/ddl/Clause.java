@@ -17,6 +17,7 @@ package org.thinkit.formatter.catalog.ddl;
 import org.thinkit.common.catalog.Catalog;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -42,7 +43,22 @@ public enum Clause implements Catalog<Clause> {
     /**
      * {@code column} 句
      */
-    COLUMN(2, "column");
+    COLUMN(2, "column"),
+
+    /**
+     * {@code modify} 句
+     */
+    MODIFY(3, "modify"),
+
+    /**
+     * {@code change} 句
+     */
+    CHANGE(4, "change"),
+
+    /**
+     * {@code rename} 句
+     */
+    RENAME(5, "rename");
 
     /**
      * コード値
@@ -55,4 +71,24 @@ public enum Clause implements Catalog<Clause> {
      */
     @Getter
     private final String clause;
+
+    /**
+     * 引数として渡された {@code token} に格納された文字列が {@link Clause} に定義されているか判定します。
+     *
+     * @param token 判定対象のトークン
+     * @return 引数として渡された {@code token} に格納された文字列が {@link Clause} に定義されている場合は
+     *         {@code true} 、それ以外は {@code false}
+     *
+     * @exception NullPointerException 引数として {@code null} が渡された場合
+     */
+    public static boolean contains(@NonNull String token) {
+
+        for (Clause clause : Clause.values()) {
+            if (clause.getClause().equals(token)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
