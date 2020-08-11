@@ -37,7 +37,12 @@ public enum Clause implements Catalog<Clause> {
     /**
      * {@code on} 句
      */
-    ON(1, "on");
+    ON(1, "on"),
+
+    /**
+     * {@code column} 句
+     */
+    COLUMN(2, "column");
 
     /**
      * コード値
