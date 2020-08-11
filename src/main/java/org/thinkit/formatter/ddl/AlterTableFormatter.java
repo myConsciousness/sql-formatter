@@ -17,6 +17,8 @@ package org.thinkit.formatter.ddl;
 import org.thinkit.common.Precondition;
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.common.exception.IllegalNumberFoundException;
+import org.thinkit.formatter.catalog.ddl.DdlStatement;
+import org.thinkit.formatter.catalog.ddl.StartClause;
 import org.thinkit.formatter.common.Formatter;
 
 import lombok.EqualsAndHashCode;
@@ -97,8 +99,17 @@ final class AlterTableFormatter implements Formatter {
                     }
                 }
             } else if (tokenizer.isBreak()) {
-                appender.appendNewline().appendToken();
-                appender.incrementIndent().appendNewline().decrementIndent();
+
+                if (!StartClause.COLUMN.getClause().equals(tokenizer.getLowercaseToken())) {
+                    appender.appendNewline();
+                }
+
+                appender.appendToken();
+
+                if (!StartClause.RENAME.getClause().equals(tokenizer.getLowercaseToken())
+                        && !DdlStatement.DROP.getStatement().equals(tokenizer.getLowercaseToken())) {
+                    appender.incrementIndent().appendNewline().decrementIndent();
+                }
             } else {
                 if (Delimiter.semicolon().equals(tokenizer.getToken())) {
                     appender.appendNewline();

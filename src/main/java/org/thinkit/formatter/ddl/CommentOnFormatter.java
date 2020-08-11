@@ -16,8 +16,8 @@ package org.thinkit.formatter.ddl;
 
 import org.thinkit.common.Precondition;
 import org.thinkit.common.exception.IllegalNumberFoundException;
-import org.thinkit.formatter.catalog.ddl.Clause;
 import org.thinkit.formatter.catalog.ddl.LogicalExpression;
+import org.thinkit.formatter.catalog.ddl.StartClause;
 import org.thinkit.formatter.common.Formatter;
 
 import lombok.EqualsAndHashCode;
@@ -97,7 +97,7 @@ final class CommentOnFormatter implements Formatter {
 
         while (tokenizer.next()) {
 
-            if (Clause.COLUMN.getClause().equals(tokenizer.getLowercaseToken())
+            if (StartClause.COLUMN.getClause().equals(tokenizer.getLowercaseToken())
                     || LogicalExpression.IS.getExpression().equals(tokenizer.getLowercaseToken())) {
                 appender.appendNewline().appendToken();
                 startLine = true;

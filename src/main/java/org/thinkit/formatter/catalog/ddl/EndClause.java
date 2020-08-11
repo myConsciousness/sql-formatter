@@ -38,7 +38,12 @@ public enum EndClause implements Catalog<EndClause> {
     /**
      * {@code change} 句
      */
-    CHANGE(1, "change");
+    CHANGE(1, "change"),
+
+    /**
+     * {@code to} 句
+     */
+    TO(2, "to");
 
     /**
      * コード値

@@ -17,10 +17,11 @@ package org.thinkit.formatter.ddl;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.thinkit.formatter.catalog.ddl.Clause;
 import org.thinkit.formatter.catalog.ddl.Constraint;
 import org.thinkit.formatter.catalog.ddl.DdlStatement;
 import org.thinkit.formatter.catalog.ddl.DdlTokenDelimiter;
+import org.thinkit.formatter.catalog.ddl.EndClause;
+import org.thinkit.formatter.catalog.ddl.StartClause;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -130,7 +131,8 @@ final class DdlTokenizer {
     }
 
     public boolean isBreak() {
-        return DdlStatement.DROP.getStatement().equals(this.lowercaseToken) || Clause.contains(this.lowercaseToken)
+        return DdlStatement.DROP.getStatement().equals(this.lowercaseToken) || StartClause.contains(this.lowercaseToken)
+                || (!EndClause.TO.getClause().equals(this.lowercaseToken) && EndClause.contains(this.lowercaseToken))
                 || Constraint.contains(this.lowercaseToken);
 
     }
