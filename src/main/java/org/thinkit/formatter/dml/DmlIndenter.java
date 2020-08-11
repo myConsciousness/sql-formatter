@@ -15,16 +15,22 @@
 package org.thinkit.formatter.dml;
 
 import org.thinkit.common.catalog.Indentation;
-import org.thinkit.formatter.common.Indenter;
+import org.thinkit.formatter.common.Indentable;
 
 /**
  * DML命令のインデント操作を管理するクラスです。
+ * <p>
+ * この {@link DmlIndenter} クラスは {@code formatter-commons} プロジェクトでより汎用的な
+ * {@link Indentable} インターフェースおよび {@link Indent} クラスの実装により非推奨となりました。
  *
  * @author Kato Shinya
  * @since 1.0
  * @version 1.0
+ *
+ * @deprecated
  */
-final class DmlIndenter implements Indenter {
+@Deprecated
+final class DmlIndenter {
 
     /**
      * 改行コード
@@ -78,19 +84,16 @@ final class DmlIndenter implements Indenter {
         return new DmlIndenter(indent);
     }
 
-    @Override
-    public Indenter increment() {
+    public DmlIndenter increment() {
         this.indentFactor++;
         return this;
     }
 
-    @Override
-    public Indenter decrement() {
+    public DmlIndenter decrement() {
         this.indentFactor--;
         return this;
     }
 
-    @Override
     public String newline() {
 
         final StringBuilder newline = new StringBuilder();
