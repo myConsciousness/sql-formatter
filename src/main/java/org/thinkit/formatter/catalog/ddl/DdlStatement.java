@@ -42,7 +42,18 @@ public enum DdlStatement implements Catalog<DdlStatement> {
     /**
      * {@code comment on} ステートメント
      */
-    COMMENT_ON(2, "comment on");
+    COMMENT_ON(2, "comment on"),
+
+    /**
+     * {@code create database} ステートメント
+     */
+    CREATE_DATABASE(3, "create database"),
+
+    /**
+     * {@code create drop} ステートメント
+     */
+    DROP(4, "drop");
+    ;
 
     /**
      * コード値
