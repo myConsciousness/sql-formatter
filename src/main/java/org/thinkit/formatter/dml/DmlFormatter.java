@@ -159,15 +159,16 @@ public final class DmlFormatter implements Formatter {
         appender.appendToken();
 
         if (DmlStatement.SELECT.getStatement().equals(tokenizer.getLowercaseToken())) {
-            appender.toBeginLine().increment().appendNewLine();
+            appender.toBeginLine().incrementIndent().appendNewLine();
             startParenthesis.push();
             field.push().toNewline();
         } else {
-            appender.toNotBeginLine().increment();
 
             if (DmlStatement.UPDATE.getStatement().equals(tokenizer.getLowercaseToken())) {
                 appender.toBeginLine().appendNewLine();
             }
+
+            appender.toNotBeginLine().incrementIndent();
         }
     }
 
@@ -186,10 +187,10 @@ public final class DmlFormatter implements Formatter {
 
         if (!inClauses) {
             if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
-                appender.decrement();
+                appender.decrementIndent();
             }
 
-            appender.decrement().appendNewLine();
+            appender.decrementIndent().appendNewLine();
         }
 
         appender.toNotBeginLine().appendToken();
@@ -212,16 +213,16 @@ public final class DmlFormatter implements Formatter {
 
         if (!inClauses) {
             if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
-                appender.decrement();
+                appender.decrementIndent();
             }
 
-            appender.decrement().appendNewLine();
+            appender.decrementIndent().appendNewLine();
         }
 
         final String lowercaseToken = tokenizer.getLowercaseToken();
 
         if (!EndClause.UNION.getClause().equals(lowercaseToken)) {
-            appender.increment();
+            appender.incrementIndent();
         }
 
         appender.toBeginLine().appendToken().appendNewLine();
@@ -242,7 +243,7 @@ public final class DmlFormatter implements Formatter {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     private void onStatement(@NonNull DmlAppender appender) {
-        appender.toNotBeginLine().increment().appendNewLine().appendToken();
+        appender.toNotBeginLine().incrementIndent().appendNewLine().appendToken();
     }
 
     /**
@@ -254,7 +255,7 @@ public final class DmlFormatter implements Formatter {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     private void afterOnStatement(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
-        appender.toBeginLine().appendToken().decrement().appendNewLine();
+        appender.toBeginLine().appendToken().decrementIndent().appendNewLine();
         field.toNewline();
     }
 
@@ -284,7 +285,7 @@ public final class DmlFormatter implements Formatter {
             appender.appendToken();
 
             if (!field.isNewline()) {
-                appender.toBeginLine().increment().appendNewLine();
+                appender.toBeginLine().incrementIndent().appendNewLine();
             }
         }
     }
@@ -305,16 +306,16 @@ public final class DmlFormatter implements Formatter {
         startParenthesis.decrement();
 
         if (startParenthesis.hasParenthesis()) {
-            appender.decrement();
+            appender.decrementIndent();
             startParenthesis.pop();
             field.pop();
         }
 
         if (function.isInFunction()) {
-            appender.decrement().appendToken();
+            appender.decrementIndent().appendToken();
         } else {
             if (!field.isNewline()) {
-                appender.decrement().appendNewLine();
+                appender.decrementIndent().appendNewLine();
             }
 
             appender.appendToken();
@@ -331,9 +332,9 @@ public final class DmlFormatter implements Formatter {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     private void valuesClause(@NonNull DmlAppender appender) {
-        appender.decrement().appendNewLine();
+        appender.decrementIndent().appendNewLine();
         appender.appendToken();
-        appender.increment().appendNewLine();
+        appender.incrementIndent().appendNewLine();
         appender.toBeginLine();
     }
 
@@ -348,7 +349,7 @@ public final class DmlFormatter implements Formatter {
     private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
 
         if (LogicalExpression.END.getExpression().equals(tokenizer.getLowercaseToken())) {
-            appender.decrement();
+            appender.decrementIndent();
         }
 
         appender.toNotBeginLine().appendNewLine().appendToken();
@@ -395,7 +396,7 @@ public final class DmlFormatter implements Formatter {
         } else {
             appender.toNotBeginLine();
             if (LogicalExpression.CASE.getExpression().equals(tokenizer.getLowercaseToken())) {
-                appender.increment();
+                appender.incrementIndent();
             }
         }
     }

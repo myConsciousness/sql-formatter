@@ -14,6 +14,12 @@
 
 package org.thinkit.formatter.dml;
 
+import org.thinkit.common.exception.LogicException;
+import org.thinkit.formatter.common.Indent;
+import org.thinkit.formatter.common.Indentable;
+import org.thinkit.formatter.common.Line;
+import org.thinkit.formatter.common.Newline;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -41,9 +47,14 @@ final class DmlAppender {
     private DmlTokenizer dmlTokenizer;
 
     /**
-     * DMLインデンター
+     * インデント
      */
-    private DmlIndenter dmlIndenter;
+    private Indentable indent;
+
+    /**
+     * 改行
+     */
+    private Line newline;
 
     /**
      * 開始ライン
@@ -124,12 +135,24 @@ final class DmlAppender {
             return this;
         }
 
+        /**
+         *
+         *
+         * @return
+         */
         public DmlAppender build() {
+
+            if (this.dmlTokenizer == null) {
+                throw new LogicException("Tonenizer is required but null was given");
+            }
+
             final DmlAppender appender = DmlAppender.of();
             appender.sql = new StringBuilder();
             appender.dmlTokenizer = this.dmlTokenizer;
-            appender.dmlIndenter = DmlIndenter.of(this.indent);
+            appender.indent = Indent.of(this.indent);
+            appender.newline = Newline.of(appender.indent);
             appender.beginLine = false;
+
             return appender;
         }
     }
@@ -156,7 +179,7 @@ final class DmlAppender {
      * @return 自分自身のインスタンス
      */
     public DmlAppender appendNewLine() {
-        this.sql.append(this.dmlIndenter.newline());
+        this.sql.append(this.newline.create());
         return this;
     }
 
@@ -168,8 +191,8 @@ final class DmlAppender {
      *
      * @return 自分自身のインスタンス
      */
-    public DmlAppender increment() {
-        this.dmlIndenter.increment();
+    public DmlAppender incrementIndent() {
+        this.indent.increment();
         return this;
     }
 
@@ -181,8 +204,8 @@ final class DmlAppender {
      *
      * @return 自分自身のインスタンス
      */
-    public DmlAppender decrement() {
-        this.dmlIndenter.decrement();
+    public DmlAppender decrementIndent() {
+        this.indent.decrement();
         return this;
     }
 
