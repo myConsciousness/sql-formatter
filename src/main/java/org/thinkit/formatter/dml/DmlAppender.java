@@ -136,9 +136,18 @@ final class DmlAppender {
         }
 
         /**
+         * {@link #register(DmlTokenizer)} メソッドと {@link #withIndent(int)} メソッドで設定された値を基に
+         * {@link DmlAppender} クラスの新しいインスタンスを生成し返却します。
+         * <p>
+         * {@link #register(DmlTokenizer)} メソッドが呼び出されていない場合、または
+         * {@link #register(DmlTokenizer)} メソッドで設定された値が {@code null} の場合は
+         * {@link LogicException} が実行時に必ず発生します。
          *
+         * @return {@link DmlAppender} クラスの新しいインスタンス
          *
-         * @return
+         * @throws LogicException {@link #register(DmlTokenizer)} メソッドが呼び出されていない場合、または
+         *                        {@link #register(DmlTokenizer)} メソッドで設定された値が
+         *                        {@code null} の場合
          */
         public DmlAppender build() {
 
