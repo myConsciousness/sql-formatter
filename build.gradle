@@ -40,7 +40,7 @@ run {
         args project.sql
     } else {
         // demo for select
-        args "     select t.id, h.name, t.hoge from test t, test as hoge group by something desc left outer join hoge h on t.id = h.id and t.id = h.id where name like '%hogehoge' and test in ('test', 'test', 'test', 'test');"
+        args "      select t.foo, h.foo, t.foo from foo t, foo as hoge order by something desc left outer join foo h on t.foo = h.foo and t.foo = h.foo where name like '%foofoofoo' and test in ('foo', 'foo', 'foo', 'foo');"
 
         // demo for create table
         args "create table staff (id int not null, name varchar(10) default 'NoData');"
