@@ -17,7 +17,10 @@ package org.thinkit.formatter.ddl;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.thinkit.formatter.catalog.ddl.Clause;
+import org.thinkit.formatter.catalog.ddl.Constraint;
 import org.thinkit.formatter.catalog.ddl.DdlStatement;
+import org.thinkit.formatter.catalog.ddl.DdlTokenDelimiter;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -59,10 +62,7 @@ final class DdlTokenizer {
     }
 
     /**
-     * 引数として渡された {@code sql} を基に {@link DdlTokenizer} クラスの新しいインスタンスを生成します。
-     * <p>
-     * 以下のDDLクエリをサポートしています。サポート対象外のDDLクエリが渡された場合は {@link IllegalArgumentException}
-     * が必ず実行時に発生します。
+     * コンストラクタ
      *
      * @param sql 処理対象のSQL
      *
@@ -73,14 +73,29 @@ final class DdlTokenizer {
         final String lowercaseSql = sql.toLowerCase();
 
         if (lowercaseSql.startsWith(DdlStatement.CREATE_TABLE.getStatement())) {
-            this.tokenizer = new StringTokenizer(sql, "(,)'[]\"", true);
+            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.CREATE_TABLE.getDelimiter(), true);
         } else if (lowercaseSql.startsWith(DdlStatement.ALTER_TABLE.getStatement())) {
-            this.tokenizer = new StringTokenizer(sql, " (,)'[]\"", true);
+            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.ALTER_TABLE.getDelimiter(), true);
         } else if (lowercaseSql.startsWith(DdlStatement.COMMENT_ON.getStatement())) {
-            this.tokenizer = new StringTokenizer(sql, " '[]\"", true);
+            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.COMMENT_ON.getDelimiter(), true);
         } else {
             throw new IllegalArgumentException(String.format("Unsupported DDL query was given: %s", sql));
         }
+    }
+
+    /**
+     * 引数として渡された {@code sql} を基に {@link DdlTokenizer} クラスの新しいインスタンスを生成します。
+     * <p>
+     * 以下のDDLクエリをサポートしています。サポート対象外のDDLクエリが渡された場合は {@link IllegalArgumentException}
+     * が必ず実行時に発生します。
+     *
+     * @param sql 処理対象のSQL
+     * @return {@link DdlTokenizer} クラスの新しいインスタンス
+     *
+     * @throws IllegalArgumentException サポート対象外のDDLクエリが渡された場合
+     */
+    public static DdlTokenizer of(@NonNull String sql) {
+        return new DdlTokenizer(sql);
     }
 
     /**
@@ -109,5 +124,16 @@ final class DdlTokenizer {
         this.lowercaseToken = this.token.toLowerCase(Locale.ROOT);
 
         return true;
+    }
+
+    public boolean isBreak() {
+        return DdlStatement.DROP.getStatement().equals(this.token) || Clause.ADD.getClause().equals(this.token)
+                || Constraint.REFERENCES.getConstraint().equals(this.token)
+                || Constraint.FOREIGN.getConstraint().equals(this.token) || Clause.ON.getClause().equals(this.token);
+    }
+
+    public boolean isQuote() {
+        return "\"".equals(this.token) || "`".equals(this.token) || "]".equals(this.token) || "[".equals(this.token)
+                || "'".equals(this.token);
     }
 }
