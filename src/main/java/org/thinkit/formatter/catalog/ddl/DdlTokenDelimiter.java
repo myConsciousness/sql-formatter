@@ -32,17 +32,17 @@ public enum DdlTokenDelimiter implements Catalog<DdlTokenDelimiter> {
     /**
      * {@code create table} のトークン区切り文字
      */
-    CREATE_TABLE(0, "(,)'[]\""),
+    CREATE_TABLE(0, " ;(,)'[]\""),
 
     /**
      * {@code alter table} のトークン区切り文字
      */
-    ALTER_TABLE(1, " (,)'[]\""),
+    ALTER_TABLE(1, " ;(,)'[]\""),
 
     /**
      * {@code comment on} のトークン区切り文字
      */
-    COMMENT_ON(2, " '[]\"");
+    COMMENT_ON(2, " ;'[]\"");
 
     /**
      * コード値
