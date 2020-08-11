@@ -14,6 +14,12 @@
 
 package org.thinkit.formatter.ddl;
 
+import org.thinkit.common.exception.LogicException;
+import org.thinkit.formatter.common.Indent;
+import org.thinkit.formatter.common.Indentable;
+import org.thinkit.formatter.common.Line;
+import org.thinkit.formatter.common.Newline;
+
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
@@ -40,34 +46,116 @@ final class DdlAppender {
     private DdlTokenizer ddlTokenizer;
 
     /**
+     * インデント
+     */
+    private Indentable indent;
+
+    /**
+     * 改行
+     */
+    private Line newline;
+
+    /**
      * デフォルトコンストラクタ
      */
     private DdlAppender() {
     }
 
     /**
-     * コンストラクタ
+     * {@link DdlAppender} クラスの新しいインスタンスを生成し返却します。
      *
-     * @param ddlTokenizer DDL命令のトークナイザー
-     *
-     * @exception NullPointerException 引数として {@code null} が渡された場合
+     * @return {@link DdlAppender} クラスの新しいインスタンス
      */
-    private DdlAppender(@NonNull DdlTokenizer ddlTokenizer) {
-        this.sql = new StringBuilder();
-        this.ddlTokenizer = ddlTokenizer;
+    private static DdlAppender of() {
+        return new DdlAppender();
     }
 
     /**
-     * {@link DdlAppender} クラスと連動する {@code ddlTokenizer} オブジェクトを登録して
-     * {@link DdlAppender} クラスの新しいインスタンスを生成し返却します。
+     * {@link DdlAppender} クラスのインスタンスを生成する {@link Builder} クラスの新しいインスタンスを生成し返却します。
      *
-     * @param ddlTokenizer {@link DdlAppender} クラスと連動する {@code ddlTokenizer} オブジェクト
-     * @return {@link DdlAppender} クラスの新しいインスタンス
-     *
-     * @exception NullPointerException 引数として {@code null} が渡された場合
+     * @return {@link Builder} クラスの新しいインスタンス
      */
-    public static DdlAppender register(@NonNull DdlTokenizer ddlTokenizer) {
-        return new DdlAppender(ddlTokenizer);
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * {@link DdlAppender} クラスのインスタンスを生成する処理を定義したビルダークラスです。
+     *
+     * @author Kato Shinya
+     * @since 1.0
+     * @version 1.0
+     */
+    public static class Builder {
+
+        /**
+         * DDLトークナイザ
+         */
+        private DdlTokenizer ddlTokenizer;
+
+        /**
+         * インデント数
+         */
+        private int indent = 4;
+
+        /**
+         * デフォルトコンストラクタ
+         */
+        private Builder() {
+        }
+
+        /**
+         * 連動する {@link DdlTokenizer} クラスを登録した {@link DdlAppender} クラスに登録します。
+         *
+         * @param ddlTokenizer {@link DdlAppender} クラスと連動するDMLのトークナイザー
+         *
+         * @exception NullPointerException 引数として {@code null} が渡された場合
+         */
+        public Builder register(@NonNull DdlTokenizer ddlTokenizer) {
+            this.ddlTokenizer = ddlTokenizer;
+            return this;
+        }
+
+        /**
+         * インデント数を設定します。
+         *
+         * @param indent インデント数
+         *
+         * @exception NullPointerException 引数として {@code null} が渡された場合
+         */
+        public Builder withIndent(int indent) {
+            this.indent = indent;
+            return this;
+        }
+
+        /**
+         * {@link #register(DdlTokenizer)} メソッドと {@link #withIndent(int)} メソッドで設定された値を基に
+         * {@link DdlAppender} クラスの新しいインスタンスを生成し返却します。
+         * <p>
+         * {@link #register(DdlTokenizer)} メソッドが呼び出されていない場合、または
+         * {@link #register(DdlTokenizer)} メソッドで設定された値が {@code null} の場合は
+         * {@link LogicException} が実行時に必ず発生します。
+         *
+         * @return {@link DdlAppender} クラスの新しいインスタンス
+         *
+         * @throws LogicException {@link #register(DdlTokenizer)} メソッドが呼び出されていない場合、または
+         *                        {@link #register(DdlTokenizer)} メソッドで設定された値が
+         *                        {@code null} の場合
+         */
+        public DdlAppender build() {
+
+            if (this.ddlTokenizer == null) {
+                throw new LogicException("Tonenizer is required but null was given");
+            }
+
+            final DdlAppender appender = DdlAppender.of();
+            appender.sql = new StringBuilder();
+            appender.ddlTokenizer = this.ddlTokenizer;
+            appender.indent = Indent.of(this.indent);
+            appender.newline = Newline.of(appender.indent);
+
+            return appender;
+        }
     }
 
     /**
@@ -83,8 +171,47 @@ final class DdlAppender {
         return this;
     }
 
+    /**
+     * {@link Newline} クラスから改行コードを取得し文字列へ追加します。
+     * <p>
+     * この {@link DdlAppender#appendNewLine()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
+    public DdlAppender appendNewline() {
+        this.sql.append(this.newline.create());
+        return this;
+    }
+
+    /**
+     * {@link Indent} クラスをインクリメントします。
+     * <p>
+     * この {@link DdlAppender#increment()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
+    public DdlAppender incrementIndent() {
+        this.indent.increment();
+        return this;
+    }
+
+    /**
+     * {@link Indent} クラスをデクリメントします。
+     * <p>
+     * この {@link DdlAppender#increment()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
+    public DdlAppender decrementIndent() {
+        this.indent.decrement();
+        return this;
+    }
+
     @Override
     public String toString() {
-        return this.ddlTokenizer.toString();
+        return this.sql.toString();
     }
 }
