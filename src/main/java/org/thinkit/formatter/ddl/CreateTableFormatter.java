@@ -101,20 +101,20 @@ final class CreateTableFormatter implements Formatter {
                 appender.appendToken();
 
                 if (depthParenthesis < 1) {
-                    appender.incrementIndent().appendNewLine();
+                    appender.incrementIndent().appendNewline();
                 }
 
                 depthParenthesis++;
 
             } else if (Delimiter.comma().equals(tokenizer.getToken())) {
-                appender.appendToken().appendNewLine();
+                appender.appendToken().appendNewline();
                 startLine = true;
             } else if (Parenthesis.end().equals(tokenizer.getToken())) {
 
                 depthParenthesis--;
 
                 if (depthParenthesis < 1) {
-                    appender.decrementIndent().appendNewLine();
+                    appender.decrementIndent().appendNewline();
                 }
 
                 appender.appendToken();
