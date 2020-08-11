@@ -17,6 +17,7 @@ package org.thinkit.formatter;
 import org.thinkit.common.Precondition;
 import org.thinkit.formatter.catalog.dml.DmlStatement;
 import org.thinkit.formatter.common.Formatter;
+import org.thinkit.formatter.ddl.DdlFormatter;
 import org.thinkit.formatter.dml.DmlFormatter;
 
 import lombok.EqualsAndHashCode;
@@ -82,6 +83,10 @@ public class SqlFormatter implements Formatter {
     @Override
     public String format(@NonNull final String sql) {
 
+        if (sql.isEmpty()) {
+            return "";
+        }
+
         final String trimmedSql = sql.trim().toLowerCase();
 
         if (trimmedSql.startsWith(DmlStatement.SELECT.getStatement())
@@ -91,6 +96,6 @@ public class SqlFormatter implements Formatter {
             return DmlFormatter.withIndent(this.indent).format(sql);
         }
 
-        return "";
+        return DdlFormatter.withIndent(this.indent).format(sql);
     }
 }
