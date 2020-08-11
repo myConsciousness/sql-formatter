@@ -14,6 +14,7 @@
 
 package org.thinkit.formatter.ddl;
 
+import org.thinkit.common.Precondition;
 import org.thinkit.common.exception.LogicException;
 import org.thinkit.formatter.common.Indent;
 import org.thinkit.formatter.common.Indentable;
@@ -143,15 +144,12 @@ final class DdlAppender {
          *                        {@code null} の場合
          */
         public DdlAppender build() {
-
-            if (this.ddlTokenizer == null) {
-                throw new LogicException("Tonenizer is required but null was given");
-            }
+            Precondition.requireNonNull(this.ddlTokenizer);
 
             final DdlAppender appender = DdlAppender.of();
             appender.sql = new StringBuilder();
             appender.ddlTokenizer = this.ddlTokenizer;
-            appender.indent = Indent.of(this.indent);
+            appender.indent = Indent.builder().withIndent(this.indent).build();
             appender.newline = Newline.of(appender.indent);
 
             return appender;

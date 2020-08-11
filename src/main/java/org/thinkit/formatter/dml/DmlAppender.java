@@ -14,6 +14,7 @@
 
 package org.thinkit.formatter.dml;
 
+import org.thinkit.common.Precondition;
 import org.thinkit.common.exception.LogicException;
 import org.thinkit.formatter.common.Indent;
 import org.thinkit.formatter.common.Indentable;
@@ -103,7 +104,7 @@ final class DmlAppender {
         /**
          * インデント数
          */
-        private int indent = 4;
+        private int indent = 1;
 
         /**
          * デフォルトコンストラクタ
@@ -150,15 +151,12 @@ final class DmlAppender {
          *                        {@code null} の場合
          */
         public DmlAppender build() {
-
-            if (this.dmlTokenizer == null) {
-                throw new LogicException("Tonenizer is required but null was given");
-            }
+            Precondition.requireNonNull(this.dmlTokenizer);
 
             final DmlAppender appender = DmlAppender.of();
             appender.sql = new StringBuilder();
             appender.dmlTokenizer = this.dmlTokenizer;
-            appender.indent = Indent.of(this.indent);
+            appender.indent = Indent.builder().withIndent(this.indent).build();
             appender.newline = Newline.of(appender.indent);
             appender.beginLine = false;
 
