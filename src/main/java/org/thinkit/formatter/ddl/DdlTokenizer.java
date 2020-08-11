@@ -81,6 +81,9 @@ final class DdlTokenizer {
         } else {
             throw new IllegalArgumentException(String.format("Unsupported DDL query was given: %s", sql));
         }
+
+        this.token = "";
+        this.lowercaseToken = "";
     }
 
     /**
@@ -127,9 +130,9 @@ final class DdlTokenizer {
     }
 
     public boolean isBreak() {
-        return DdlStatement.DROP.getStatement().equals(this.token) || Clause.ADD.getClause().equals(this.token)
-                || Constraint.REFERENCES.getConstraint().equals(this.token)
-                || Constraint.FOREIGN.getConstraint().equals(this.token) || Clause.ON.getClause().equals(this.token);
+        return DdlStatement.DROP.getStatement().equals(this.lowercaseToken) || Clause.contains(this.lowercaseToken)
+                || Constraint.contains(this.lowercaseToken);
+
     }
 
     public boolean isQuote() {
