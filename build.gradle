@@ -39,12 +39,25 @@ run {
     if (project.hasProperty('sql')) {
         args project.sql
     } else {
+        // demo for select
         args "     select t.id, h.name, t.hoge from test t, test as hoge group by something desc left outer join hoge h on t.id = h.id and t.id = h.id where name like '%hogehoge' and test in ('test', 'test', 'test', 'test');"
-        // args "create table staff (id int not null, name varchar(10) default 'NoData');"
+
+        // demo for create table
+        args "create table staff (id int not null, name varchar(10) default 'NoData');"
+
+        // demo for comment on
+        args "COMMENT ON COLUMN emp.empno IS 'this is description for column';";
+
+        // demo for alter table
+        args "ALTER TABLE t2 ADD c INT UNSIGNED NOT NULL AUTO_INCREMENT, ADD PRIMARY KEY (c);";
+        args "ALTER TABLE t2 DROP COLUMN c, b, a;";
+        args "ALTER TABLE t2 ADD INDEX (d), ADD UNIQUE (a);";
+        args "ALTER TABLE t2 MODIFY a TINYINT NOT NULL, CHANGE b c CHAR(20);";
+        args "ALTER TABLE 'aaa' RENAME TO a;";
     }
 
-    if (project.hasProperty('indentFactor')) {
-        args project.indentFactor
+    if (project.hasProperty('indent')) {
+        args project.indent
     } else {
         args "4"
     }
