@@ -389,12 +389,17 @@ public final class DmlFormatter implements Formatter {
      */
     private void otherStatements(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
 
+        if (Delimiter.semicolon().equals(tokenizer.getToken())) {
+            appender.resetIndent().appendNewLine();
+        }
+
         appender.appendToken();
 
         if (DmlStatement.INSERT.getStatement().equals(tokenizer.getLastToken())) {
             appender.toBeginLine().appendNewLine();
         } else {
             appender.toNotBeginLine();
+
             if (LogicalExpression.CASE.getExpression().equals(tokenizer.getLowercaseToken())) {
                 appender.incrementIndent();
             }

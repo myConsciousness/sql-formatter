@@ -41,7 +41,7 @@ final class DmlTokenizer {
     /**
      * 区切り文字
      */
-    private static final String TOKEN_DELIMITER = "()+*/-=<>'`\"[]," + WHITESPACES;
+    private static final String TOKEN_DELIMITER = ";()+*/-=<>'`\"[]," + WHITESPACES;
 
     /**
      * トークナイザー
