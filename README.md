@@ -5,6 +5,7 @@ This is a formatter for formatting SQL. A syntax correctness check is not yet im
 The following syntaxes of ORACLE SQL are supported. I have not checked for compatibility with other RDBMS, sorry!
 
 - DDL
+
   - `CREATE`
   - `ALTER`
   - `DROP`
@@ -50,7 +51,8 @@ left outer join
         name like '%foofoofoo'
         and test in (
             'foo', 'foo', 'foo', 'foo'
-        );
+        )
+;
 ```
 
 If you want to specify an arbitrary number of indents, create an instance with `withIndent(int)` constructor as shown below.
