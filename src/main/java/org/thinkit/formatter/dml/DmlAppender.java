@@ -191,7 +191,7 @@ final class DmlAppender {
     }
 
     /**
-     * {@link DmlIndenter} クラスをインクリメントします。
+     * {@link Indent} クラスをインクリメントします。
      * <p>
      * この {@link DmlAppender#increment()}
      * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
@@ -204,7 +204,7 @@ final class DmlAppender {
     }
 
     /**
-     * {@link DmlIndenter} クラスをデクリメントします。
+     * {@link Indent} クラスをデクリメントします。
      * <p>
      * この {@link DmlAppender#decrement()}
      * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
@@ -213,6 +213,19 @@ final class DmlAppender {
      */
     public DmlAppender decrementIndent() {
         this.indent.decrement();
+        return this;
+    }
+
+    /**
+     * {@link Indent} クラスを初期化します。
+     * <p>
+     * この {@link DmlAppender#resetIndent()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
+    public DmlAppender resetIndent() {
+        this.indent.reset();
         return this;
     }
 
