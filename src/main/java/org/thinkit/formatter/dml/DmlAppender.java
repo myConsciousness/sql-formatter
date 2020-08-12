@@ -104,7 +104,7 @@ final class DmlAppender {
         /**
          * インデント数
          */
-        private int indent = 1;
+        private int indent = 4;
 
         /**
          * デフォルトコンストラクタ
