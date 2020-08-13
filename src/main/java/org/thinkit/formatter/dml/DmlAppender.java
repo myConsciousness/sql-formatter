@@ -20,6 +20,7 @@ import org.thinkit.formatter.common.Indent;
 import org.thinkit.formatter.common.Indentable;
 import org.thinkit.formatter.common.Line;
 import org.thinkit.formatter.common.Newline;
+import org.thinkit.formatter.common.Tokenizable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -45,7 +46,7 @@ final class DmlAppender {
     /**
      * DMLトークナイザ
      */
-    private DmlTokenizer dmlTokenizer;
+    private Tokenizable dmlTokenizer;
 
     /**
      * インデント
@@ -99,7 +100,7 @@ final class DmlAppender {
         /**
          * DMLトークナイザ
          */
-        private DmlTokenizer dmlTokenizer;
+        private Tokenizable dmlTokenizer;
 
         /**
          * インデント数
@@ -119,7 +120,7 @@ final class DmlAppender {
          *
          * @exception NullPointerException 引数として {@code null} が渡された場合
          */
-        public Builder register(@NonNull DmlTokenizer dmlTokenizer) {
+        public Builder register(@NonNull Tokenizable dmlTokenizer) {
             this.dmlTokenizer = dmlTokenizer;
             return this;
         }
@@ -137,17 +138,17 @@ final class DmlAppender {
         }
 
         /**
-         * {@link #register(DmlTokenizer)} メソッドと {@link #withIndent(int)} メソッドで設定された値を基に
+         * {@link #register(Tokenizable)} メソッドと {@link #withIndent(int)} メソッドで設定された値を基に
          * {@link DmlAppender} クラスの新しいインスタンスを生成し返却します。
          * <p>
-         * {@link #register(DmlTokenizer)} メソッドが呼び出されていない場合、または
-         * {@link #register(DmlTokenizer)} メソッドで設定された値が {@code null} の場合は
+         * {@link #register(Tokenizable)} メソッドが呼び出されていない場合、または
+         * {@link #register(Tokenizable)} メソッドで設定された値が {@code null} の場合は
          * {@link LogicException} が実行時に必ず発生します。
          *
          * @return {@link DmlAppender} クラスの新しいインスタンス
          *
-         * @throws LogicException {@link #register(DmlTokenizer)} メソッドが呼び出されていない場合、または
-         *                        {@link #register(DmlTokenizer)} メソッドで設定された値が
+         * @throws LogicException {@link #register(Tokenizable)} メソッドが呼び出されていない場合、または
+         *                        {@link #register(Tokenizable)} メソッドで設定された値が
          *                        {@code null} の場合
          */
         public DmlAppender build() {

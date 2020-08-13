@@ -24,6 +24,7 @@ import org.thinkit.formatter.catalog.dml.LogicalExpression;
 import org.thinkit.formatter.catalog.dml.Quantifier;
 import org.thinkit.formatter.catalog.dml.StartClause;
 import org.thinkit.formatter.common.Formatter;
+import org.thinkit.formatter.common.Tokenizable;
 
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -99,7 +100,7 @@ public final class DmlFormatter implements Formatter {
 
         boolean inClauses = false;
 
-        final DmlTokenizer tokenizer = DmlTokenizer.of(sql);
+        final Tokenizable tokenizer = DmlTokenizer.of(sql);
         final DmlAppender appender = DmlAppender.builder().register(tokenizer).withIndent(this.indent).build();
 
         while (tokenizer.next()) {
@@ -153,7 +154,7 @@ public final class DmlFormatter implements Formatter {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void dmlStatement(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer,
+    private void dmlStatement(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer,
             @NonNull ParenthesisFixer startParenthesis, @NonNull FieldFixer field) {
 
         appender.appendToken();
@@ -183,7 +184,7 @@ public final class DmlFormatter implements Formatter {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void startClause(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer, boolean inClauses) {
+    private void startClause(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer, boolean inClauses) {
 
         if (!inClauses) {
             if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
@@ -208,7 +209,7 @@ public final class DmlFormatter implements Formatter {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void endClause(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer, @NonNull FieldFixer field,
+    private void endClause(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer, @NonNull FieldFixer field,
             boolean inClauses) {
 
         if (!inClauses) {
@@ -270,7 +271,7 @@ public final class DmlFormatter implements Formatter {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void startParenthesis(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer,
+    private void startParenthesis(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer,
             @NonNull FunctionFixer function, @NonNull FieldFixer field, @NonNull ParenthesisFixer startParenthesis) {
 
         startParenthesis.increment();
@@ -346,7 +347,7 @@ public final class DmlFormatter implements Formatter {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
+    private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer) {
 
         if (LogicalExpression.END.getExpression().equals(tokenizer.getLowercaseToken())) {
             appender.decrementIndent();
@@ -387,7 +388,7 @@ public final class DmlFormatter implements Formatter {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void otherStatements(@NonNull DmlAppender appender, @NonNull DmlTokenizer tokenizer) {
+    private void otherStatements(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer) {
 
         if (Delimiter.semicolon().equals(tokenizer.getToken())) {
             appender.resetIndent().appendNewLine();

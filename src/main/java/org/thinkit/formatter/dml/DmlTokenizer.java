@@ -17,6 +17,9 @@ package org.thinkit.formatter.dml;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.thinkit.formatter.common.Tokenizable;
+import org.thinkit.formatter.common.catalog.Whitespace;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -31,17 +34,12 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-final class DmlTokenizer {
-
-    /**
-     * 空白
-     */
-    private static final String WHITESPACES = " \n\r\f\t";
+final class DmlTokenizer implements Tokenizable {
 
     /**
      * 区切り文字
      */
-    private static final String TOKEN_DELIMITER = ";()+*/-=<>'`\"[]," + WHITESPACES;
+    private static final String TOKEN_DELIMITER = ";()+*/-=<>'`\"[]," + Whitespace.stringify();
 
     /**
      * トークナイザー
@@ -92,27 +90,11 @@ final class DmlTokenizer {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    public static DmlTokenizer of(@NonNull String sql) {
+    public static Tokenizable of(@NonNull String sql) {
         return new DmlTokenizer(sql);
     }
 
-    /**
-     * {@link DmlTokenizer} クラスのインスタンス生成時に渡した {@code sql}
-     * を基に生成されたトークナイザからトークンを取得し、トークナイザの位置をインクリメントします。
-     * <p>
-     * {@link DmlTokenizer#next()} メソッドを実行した際にトークナイザから取得できるトークンが存在しない場合は
-     * {@code false} を返却します。取得できるトークンが存在する場合は {@code true} を返却します。
-     * <p>
-     * {@link DmlTokenizer#next()} メソッドの実行後は以下の {@code Getter}
-     * メソッドを使用することで現在位置のトークンを取得することができます。
-     * <p>
-     * {@link DmlTokenizer#getToken()} <br>
-     * {@link DmlTokenizer#getLowercaseToken()} <br>
-     * {@link DmlTokenizer#getLastToken()}
-     *
-     * @return {@link DmlTokenizer#next()} メソッドを実行した際にトークナイザから取得できるトークンが存在しない場合は
-     *         {@code false} 、取得できるトークンが存在する場合は {@code true}
-     */
+    @Override
     public boolean next() {
 
         if (!this.tokenizer.hasMoreTokens()) {
@@ -144,18 +126,5 @@ final class DmlTokenizer {
         }
 
         return true;
-    }
-
-    /**
-     * 引数として指定された {@code token} に格納された値に空白が含まれているか判定します。
-     *
-     * @param token 判定対象のトークン
-     * @return 引数として指定された {@code token} に格納された値に空白が含まれている場合は {@code true} 、それ以外は
-     *         {@code false}
-     *
-     * @exception NullPointerException 引数として {@code null} が渡された場合
-     */
-    private boolean isWhitespace(@NonNull String token) {
-        return WHITESPACES.contains(token);
     }
 }
