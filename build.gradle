@@ -35,6 +35,14 @@ application {
     mainClassName = 'org.thinkit.formatter.EntrySqlFormatter'
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = "UTF-8"
+}
+
 run {
     if (project.hasProperty('sql')) {
         args project.sql
