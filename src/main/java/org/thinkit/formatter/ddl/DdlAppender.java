@@ -20,6 +20,7 @@ import org.thinkit.formatter.common.Indent;
 import org.thinkit.formatter.common.Indentable;
 import org.thinkit.formatter.common.Line;
 import org.thinkit.formatter.common.Newline;
+import org.thinkit.formatter.common.Tokenizable;
 import org.thinkit.formatter.content.ddl.entity.DdlDefaultIndentItem;
 import org.thinkit.formatter.content.ddl.rule.DdlDefaultIndentItemCollector;
 import org.thinkit.framework.content.rule.RuleInvoker;
@@ -47,7 +48,7 @@ final class DdlAppender {
     /**
      * DDL命令のトークナイザー
      */
-    private DdlTokenizer ddlTokenizer;
+    private Tokenizable ddlTokenizer;
 
     /**
      * インデント
@@ -95,7 +96,7 @@ final class DdlAppender {
         /**
          * DDLトークナイザ
          */
-        private DdlTokenizer ddlTokenizer;
+        private Tokenizable ddlTokenizer;
 
         /**
          * インデント数
@@ -115,7 +116,7 @@ final class DdlAppender {
          *
          * @exception NullPointerException 引数として {@code null} が渡された場合
          */
-        public Builder register(@NonNull DdlTokenizer ddlTokenizer) {
+        public Builder register(@NonNull Tokenizable ddlTokenizer) {
             this.ddlTokenizer = ddlTokenizer;
             return this;
         }

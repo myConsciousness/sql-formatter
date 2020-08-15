@@ -22,6 +22,7 @@ import org.thinkit.formatter.catalog.ddl.DdlStatement;
 import org.thinkit.formatter.catalog.ddl.DdlTokenDelimiter;
 import org.thinkit.formatter.catalog.ddl.EndClause;
 import org.thinkit.formatter.catalog.ddl.StartClause;
+import org.thinkit.formatter.common.Tokenizable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,7 +38,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-final class DdlTokenizer {
+final class DdlTokenizer implements Tokenizable {
 
     /**
      * トークナイザー
@@ -55,6 +56,12 @@ final class DdlTokenizer {
      */
     @Getter
     private String lowercaseToken;
+
+    /**
+     * 1つ前のトークン
+     */
+    @Getter
+    private String lastToken;
 
     /**
      * デフォルトコンストラクタ
