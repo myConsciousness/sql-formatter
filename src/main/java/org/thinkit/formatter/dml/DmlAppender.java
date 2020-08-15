@@ -21,6 +21,9 @@ import org.thinkit.formatter.common.Indentable;
 import org.thinkit.formatter.common.Line;
 import org.thinkit.formatter.common.Newline;
 import org.thinkit.formatter.common.Tokenizable;
+import org.thinkit.formatter.content.dml.entity.DmlDefaultIndentItem;
+import org.thinkit.formatter.content.dml.rule.DmlDefaultIndentItemCollector;
+import org.thinkit.framework.content.rule.RuleInvoker;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -105,7 +108,7 @@ final class DmlAppender {
         /**
          * インデント数
          */
-        private int indent = 4;
+        private int indent = -1;
 
         /**
          * デフォルトコンストラクタ
@@ -157,7 +160,16 @@ final class DmlAppender {
             final DmlAppender appender = DmlAppender.of();
             appender.sql = new StringBuilder();
             appender.dmlTokenizer = this.dmlTokenizer;
-            appender.indent = Indent.builder().withIndent(this.indent).build();
+
+            if (this.indent < 0) {
+                final DmlDefaultIndentItem defaultIndentItem = RuleInvoker.of(DmlDefaultIndentItemCollector.of())
+                        .invoke();
+                appender.indent = Indent.builder().withIndent(defaultIndentItem.getIndent())
+                        .withIndentType(defaultIndentItem.getIndentType()).build();
+            } else {
+                appender.indent = Indent.builder().withIndent(this.indent).build();
+            }
+
             appender.newline = Newline.of(appender.indent);
             appender.beginLine = false;
 

@@ -43,6 +43,6 @@ public final class EntrySqlFormatter {
                     "No argument was passed to start the SQL formatter. SQL query to be formatted is a required.");
         }
 
-        System.out.println(SqlFormatter.of().format(args[0]));
+        System.out.println(SqlFormatter.withIndent(Integer.parseInt(args[1])).format(args[0]));
     }
 }

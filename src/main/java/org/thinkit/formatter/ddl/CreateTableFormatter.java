@@ -14,7 +14,6 @@
 
 package org.thinkit.formatter.ddl;
 
-import org.thinkit.common.Precondition;
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.common.catalog.Parenthesis;
 import org.thinkit.common.exception.IllegalNumberFoundException;
@@ -56,11 +55,8 @@ final class CreateTableFormatter implements Formatter {
      * コンストラクタ
      *
      * @param indent インデント数
-     *
-     * @throws IllegalNumberFoundException 引数として指定された {@code indent} の数値が負数の場合
      */
     private CreateTableFormatter(int indent) {
-        Precondition.requirePositive(indent);
         this.indent = indent;
     }
 

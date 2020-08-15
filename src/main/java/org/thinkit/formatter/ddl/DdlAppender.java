@@ -20,6 +20,9 @@ import org.thinkit.formatter.common.Indent;
 import org.thinkit.formatter.common.Indentable;
 import org.thinkit.formatter.common.Line;
 import org.thinkit.formatter.common.Newline;
+import org.thinkit.formatter.content.ddl.entity.DdlDefaultIndentItem;
+import org.thinkit.formatter.content.ddl.rule.DdlDefaultIndentItemCollector;
+import org.thinkit.framework.content.rule.RuleInvoker;
 
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -97,7 +100,7 @@ final class DdlAppender {
         /**
          * インデント数
          */
-        private int indent = 4;
+        private int indent = -1;
 
         /**
          * デフォルトコンストラクタ
@@ -149,7 +152,16 @@ final class DdlAppender {
             final DdlAppender appender = DdlAppender.of();
             appender.sql = new StringBuilder();
             appender.ddlTokenizer = this.ddlTokenizer;
-            appender.indent = Indent.builder().withIndent(this.indent).build();
+
+            if (this.indent < 0) {
+                final DdlDefaultIndentItem defaultIndentItem = RuleInvoker.of(DdlDefaultIndentItemCollector.of())
+                        .invoke();
+                appender.indent = Indent.builder().withIndent(defaultIndentItem.getIndent())
+                        .withIndentType(defaultIndentItem.getIndentType()).build();
+            } else {
+                appender.indent = Indent.builder().withIndent(this.indent).build();
+            }
+
             appender.newline = Newline.of(appender.indent);
 
             return appender;

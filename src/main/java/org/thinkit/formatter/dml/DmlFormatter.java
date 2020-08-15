@@ -14,7 +14,6 @@
 
 package org.thinkit.formatter.dml;
 
-import org.thinkit.common.Precondition;
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.common.catalog.Parenthesis;
 import org.thinkit.formatter.SqlFormatter;
@@ -62,11 +61,8 @@ public final class DmlFormatter implements Formatter {
      * コンストラクタ
      *
      * @param indent インデント数
-     *
-     * @throws IllegalArgumentException 引数として渡された {@code indent} の数値が負数の場合
      */
     private DmlFormatter(int indent) {
-        Precondition.requirePositive(indent);
         this.indent = indent;
     }
 
