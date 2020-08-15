@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "author": "Kato Shinya",
+    "since": "1.0",
+    "version": "1.0",
+    "creationDate": "2020/08/15",
+    "encoding": "UTF-8",
+    "description": "DMLのインデントに関わる既定値を管理するコンテンツです。"
+  },
+
+  "selectionNodes": [
+    {
+      "node": {
+        "conditionId": "",
+        "indentType": "0",
+        "indent": "4"
+      }
+    }
+  ],
+
+  "conditionNodes": []
+}
