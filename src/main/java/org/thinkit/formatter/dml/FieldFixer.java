@@ -44,11 +44,18 @@ final class FieldFixer {
     private boolean newline;
 
     /**
+     * 開始ライン
+     */
+    @Getter
+    private boolean startLine;
+
+    /**
      * デフォルトコンストラクタ
      */
     private FieldFixer() {
         this.deque = new ArrayDeque<>();
         this.newline = false;
+        this.startLine = false;
     }
 
     /**
@@ -110,6 +117,32 @@ final class FieldFixer {
      */
     public FieldFixer toNotNewline() {
         this.newline = false;
+        return this;
+    }
+
+    /**
+     * 開始ライン可否を {@code true} へ上書きします。
+     * <p>
+     * この {@link FieldFixer#toStartLine()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
+    public FieldFixer toStartLine() {
+        this.startLine = true;
+        return this;
+    }
+
+    /**
+     * 開始ライン可否を {@code false} へ上書きします。
+     * <p>
+     * この {@link FieldFixer#toNotStartLinenLine()}
+     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
+     *
+     * @return 自分自身のインスタンス
+     */
+    public FieldFixer toNotStartLine() {
+        this.startLine = false;
         return this;
     }
 }

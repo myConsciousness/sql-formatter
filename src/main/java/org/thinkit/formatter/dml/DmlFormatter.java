@@ -107,33 +107,33 @@ public final class DmlFormatter implements Formatter {
             if (DmlStatement.contains(lowercaseToken)) {
                 this.dmlStatement(appender, tokenizer, startParenthesis, field);
             } else if (StartClause.contains(lowercaseToken)) {
-                this.startClause(appender, tokenizer, inClauses);
+                this.startClause(appender, tokenizer, field, inClauses);
                 inClauses = true;
             } else if (EndClause.ON.getClause().equals(lastToken) & Delimiter.comma().equals(token)) {
                 this.afterOnStatement(appender, field);
             } else if (EndClause.ON.getClause().equals(lowercaseToken)) {
-                this.onStatement(appender);
+                this.onStatement(appender, field);
             } else if (EndClause.contains(lowercaseToken)) {
                 this.endClause(appender, tokenizer, field, inClauses);
                 inClauses = false;
             } else if (field.isNewline() && Delimiter.comma().equals(token)) {
-                this.fieldItem(appender);
+                this.fieldItem(appender, field);
             } else if (Parenthesis.start().equals(token)) {
                 this.startParenthesis(appender, tokenizer, function, field, startParenthesis);
             } else if (Parenthesis.end().equals(token)) {
                 this.endParenthesis(appender, function, field, startParenthesis);
             } else if (EndClause.VALUES.getClause().equals(lowercaseToken)) {
-                this.valuesClause(appender);
+                this.valuesClause(appender, field);
             } else if (LogicalExpression.contains(lowercaseToken)
                     && !LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
-                this.logicalExceptCase(appender, tokenizer);
+                this.logicalExceptCase(appender, tokenizer, field);
             } else if (Quantifier.BETWEEN.getQuantifier().equals(lastToken)
                     && LogicalExpression.AND.getExpression().equals(lowercaseToken)) {
-                this.logicalAfterBetween(appender);
+                this.logicalAfterBetween(appender, field);
             } else if (this.isWhitespace(token)) {
-                this.whitespace(appender);
+                this.whitespace(appender, field);
             } else {
-                this.otherStatements(appender, tokenizer);
+                this.otherStatements(appender, tokenizer, field);
             }
         }
 
@@ -156,16 +156,19 @@ public final class DmlFormatter implements Formatter {
         appender.appendToken();
 
         if (DmlStatement.SELECT.getStatement().equals(tokenizer.getLowercaseToken())) {
-            appender.toBeginLine().incrementIndent().appendNewLine();
+            appender.incrementIndent().appendNewLine();
             startParenthesis.push();
-            field.push().toNewline();
+            field.push().toNewline().toStartLine();
         } else {
 
+            field.toNotStartLine();
+
             if (DmlStatement.UPDATE.getStatement().equals(tokenizer.getLowercaseToken())) {
-                appender.toBeginLine().appendNewLine();
+                appender.appendNewLine();
+                field.toStartLine();
             }
 
-            appender.toNotBeginLine().incrementIndent();
+            appender.incrementIndent();
         }
     }
 
@@ -174,13 +177,15 @@ public final class DmlFormatter implements Formatter {
      *
      * @param appender  DML命令のアペンダー
      * @param tokenizer DML命令のトークナイザー
+     * @param field     フィールドの調整オブジェクト
      * @param inClauses 開始句以降かつ終了句までにあるトークンかの可否。トークンの登場位置が {@link StartClause}
      *                  クラスに定義されている要素の後で、かつ {@link EndClause} クラスに定義された要素よりも前の場合は
      *                  {@code true} を指定し、 そうでない場合は {@code false} を指定する。
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void startClause(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer, boolean inClauses) {
+    private void startClause(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer, @NonNull FieldFixer field,
+            boolean inClauses) {
 
         if (!inClauses) {
             if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
@@ -190,7 +195,8 @@ public final class DmlFormatter implements Formatter {
             appender.decrementIndent().appendNewLine();
         }
 
-        appender.toNotBeginLine().appendToken();
+        appender.appendToken();
+        field.toStartLine();
     }
 
     /**
@@ -222,7 +228,8 @@ public final class DmlFormatter implements Formatter {
             appender.incrementIndent();
         }
 
-        appender.toBeginLine().appendToken().appendNewLine();
+        appender.appendToken().appendNewLine();
+        field.toStartLine();
 
         if (EndClause.BY.getClause().equals(lowercaseToken) || EndClause.SET.getClause().equals(lowercaseToken)
                 || EndClause.FROM.getClause().equals(lowercaseToken)) {
@@ -236,11 +243,13 @@ public final class DmlFormatter implements Formatter {
      * トークンが {@code "on"} 句の場合の処理を定義したメソッドです。
      *
      * @param appender DMLのアペンダー
+     * @param field    フィールドの調整オブジェクト
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void onStatement(@NonNull DmlAppender appender) {
-        appender.toNotBeginLine().incrementIndent().appendNewLine().appendToken();
+    private void onStatement(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
+        appender.incrementIndent().appendNewLine().appendToken();
+        field.toNotStartLine();
     }
 
     /**
@@ -252,8 +261,8 @@ public final class DmlFormatter implements Formatter {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     private void afterOnStatement(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
-        appender.toBeginLine().appendToken().decrementIndent().appendNewLine();
-        field.toNewline();
+        appender.appendToken().decrementIndent().appendNewLine();
+        field.toNewline().toStartLine();
     }
 
     /**
@@ -277,12 +286,14 @@ public final class DmlFormatter implements Formatter {
         }
 
         if (function.isInFunction()) {
-            appender.toNotBeginLine().appendToken();
+            appender.appendToken();
+            field.toNotStartLine();
         } else {
             appender.appendToken();
 
             if (!field.isNewline()) {
-                appender.toBeginLine().incrementIndent().appendNewLine();
+                appender.incrementIndent().appendNewLine();
+                field.toStartLine();
             }
         }
     }
@@ -318,21 +329,22 @@ public final class DmlFormatter implements Formatter {
             appender.appendToken();
         }
 
-        appender.toNotBeginLine();
+        field.toNotStartLine();
     }
 
     /**
      * トークンが {@code "values"} 句の場合の処理を定義したメソッドです。
      *
      * @param appender DMLアペンダー
+     * @param field    フィールドの調整オブジェクト
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void valuesClause(@NonNull DmlAppender appender) {
+    private void valuesClause(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
         appender.decrementIndent().appendNewLine();
         appender.appendToken();
         appender.incrementIndent().appendNewLine();
-        appender.toBeginLine();
+        field.toStartLine();
     }
 
     /**
@@ -340,38 +352,44 @@ public final class DmlFormatter implements Formatter {
      *
      * @param appender  DMLのアペンダー
      * @param tokenizer DMLのトークナイザー
+     * @param field     フィールドの調整オブジェクト
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer) {
+    private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer,
+            @NonNull FieldFixer field) {
 
         if (LogicalExpression.END.getExpression().equals(tokenizer.getLowercaseToken())) {
             appender.decrementIndent();
         }
 
-        appender.toNotBeginLine().appendNewLine().appendToken();
+        appender.appendNewLine().appendToken();
+        field.toNotStartLine();
     }
 
     /**
      * トークンの登場位置が {@code "between"} 句よりも後である場合の処理を定義したメソッドです。
      *
      * @param appender DMLのアペンダー
+     * @param field    フィールドの調整オブジェクト
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void logicalAfterBetween(@NonNull DmlAppender appender) {
-        appender.toNotBeginLine().appendToken();
+    private void logicalAfterBetween(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
+        appender.appendToken();
+        field.toNotStartLine();
     }
 
     /**
      * トークンが空白である場合の処理を定義したメソッドです。
      *
      * @param appender DMLのアペンダー
+     * @param field    フィールドの調整オブジェクト
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void whitespace(@NonNull DmlAppender appender) {
-        if (!appender.isBeginLine()) {
+    private void whitespace(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
+        if (!field.isStartLine()) {
             appender.appendToken();
         }
     }
@@ -384,7 +402,8 @@ public final class DmlFormatter implements Formatter {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void otherStatements(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer) {
+    private void otherStatements(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer,
+            @NonNull FieldFixer field) {
 
         if (Delimiter.semicolon().equals(tokenizer.getToken())) {
             appender.resetIndent().appendNewLine();
@@ -393,9 +412,10 @@ public final class DmlFormatter implements Formatter {
         appender.appendToken();
 
         if (DmlStatement.INSERT.getStatement().equals(tokenizer.getLastToken())) {
-            appender.toBeginLine().appendNewLine();
+            appender.appendNewLine();
+            field.toStartLine();
         } else {
-            appender.toNotBeginLine();
+            field.toNotStartLine();
 
             if (LogicalExpression.CASE.getExpression().equals(tokenizer.getLowercaseToken())) {
                 appender.incrementIndent();
@@ -407,11 +427,13 @@ public final class DmlFormatter implements Formatter {
      * {@code ","} までのフィールド項目に対する処理を定義したメソッドです。
      *
      * @param appender DMLのアペンダー
+     * @param field    フィールドの調整オブジェクト
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private void fieldItem(@NonNull DmlAppender appender) {
-        appender.toBeginLine().appendToken().appendNewLine();
+    private void fieldItem(@NonNull DmlAppender appender, @NonNull FieldFixer field) {
+        appender.appendToken().appendNewLine();
+        field.toStartLine();
     }
 
     /**

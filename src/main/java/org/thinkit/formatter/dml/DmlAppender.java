@@ -26,7 +26,6 @@ import org.thinkit.formatter.content.dml.rule.DmlDefaultIndentItemCollector;
 import org.thinkit.framework.content.rule.RuleInvoker;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -60,12 +59,6 @@ final class DmlAppender {
      * 改行
      */
     private Line newline;
-
-    /**
-     * 開始ライン
-     */
-    @Getter
-    private boolean beginLine;
 
     /**
      * デフォルトコンストラクタ
@@ -171,7 +164,6 @@ final class DmlAppender {
             }
 
             appender.newline = Newline.of(appender.indent);
-            appender.beginLine = false;
 
             return appender;
         }
@@ -239,32 +231,6 @@ final class DmlAppender {
      */
     public DmlAppender resetIndent() {
         this.indent.reset();
-        return this;
-    }
-
-    /**
-     * 開始ライン可否を {@code true} へ上書きします。
-     * <p>
-     * この {@link DmlAppender#toBeginLine()}
-     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
-     *
-     * @return 自分自身のインスタンス
-     */
-    public DmlAppender toBeginLine() {
-        this.beginLine = true;
-        return this;
-    }
-
-    /**
-     * 開始ライン可否を {@code false} へ上書きします。
-     * <p>
-     * この {@link DmlAppender#toBegitoNotBeginLinenLine()}
-     * メソッドは自分自身のインスタンスを返却するため、後続処理をメソッドチェーンの形式で行うことができます。
-     *
-     * @return 自分自身のインスタンス
-     */
-    public DmlAppender toNotBeginLine() {
-        this.beginLine = false;
         return this;
     }
 
