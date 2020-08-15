@@ -138,7 +138,7 @@ final class DdlAppender {
          * <p>
          * {@link #register(DdlTokenizer)} メソッドが呼び出されていない場合、または
          * {@link #register(DdlTokenizer)} メソッドで設定された値が {@code null} の場合は
-         * {@link LogicException} が実行時に必ず発生します。
+         * {@link NullPointerException} が実行時に必ず発生します。
          *
          * @return {@link DdlAppender} クラスの新しいインスタンス
          *

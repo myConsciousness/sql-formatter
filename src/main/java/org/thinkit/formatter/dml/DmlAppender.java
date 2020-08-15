@@ -139,7 +139,7 @@ final class DmlAppender {
          * <p>
          * {@link #register(Tokenizable)} メソッドが呼び出されていない場合、または
          * {@link #register(Tokenizable)} メソッドで設定された値が {@code null} の場合は
-         * {@link LogicException} が実行時に必ず発生します。
+         * {@link NullPointerException} が実行時に必ず発生します。
          *
          * @return {@link DmlAppender} クラスの新しいインスタンス
          *
