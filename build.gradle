@@ -25,6 +25,12 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
 
+    compile 'org.apache.commons:commons-lang3:3.4'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.11.0'
+
     compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
@@ -50,24 +56,24 @@ run {
         // demo for select
         args "      select t.foo, h.foo, t.foo from foo t, foo as hoge order by something desc left outer join foo h on t.foo = h.foo and t.foo = h.foo where name like '%foofoofoo' and test in ('foo', 'foo', 'foo', 'foo');"
 
-        // demo for create table
-        args "create table staff (id int not null, name varchar(10) default 'NoData');"
+        // // demo for create table
+        // args "create table staff (id int not null, name varchar(10) default 'NoData');"
 
-        // demo for comment on
-        args "COMMENT ON COLUMN emp.empno IS 'this is description for column';";
+        // // demo for comment on
+        // args "COMMENT ON COLUMN emp.empno IS 'this is description for column';";
 
-        // demo for alter table
-        args "ALTER TABLE t2 ADD c INT UNSIGNED NOT NULL AUTO_INCREMENT, ADD PRIMARY KEY (c);";
-        args "ALTER TABLE t2 DROP COLUMN c, b, a;";
-        args "ALTER TABLE t2 ADD INDEX (d), ADD UNIQUE (a);";
-        args "ALTER TABLE t2 MODIFY a TINYINT NOT NULL, CHANGE b c CHAR(20);";
-        args "ALTER TABLE 'aaa' RENAME TO a;";
+        // // demo for alter table
+        // args "ALTER TABLE t2 ADD c INT UNSIGNED NOT NULL AUTO_INCREMENT, ADD PRIMARY KEY (c);";
+        // args "ALTER TABLE t2 DROP COLUMN c, b, a;";
+        // args "ALTER TABLE t2 ADD INDEX (d), ADD UNIQUE (a);";
+        // args "ALTER TABLE t2 MODIFY a TINYINT NOT NULL, CHANGE b c CHAR(20);";
+        // args "ALTER TABLE 'aaa' RENAME TO a;";
     }
 
     if (project.hasProperty('indent')) {
         args project.indent
     } else {
-        args "4"
+        args "-1"
     }
 }
 
