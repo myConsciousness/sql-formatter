@@ -39,7 +39,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-@ContentMapping(content = "sql/DmlDefaultIndentItem")
+@ContentMapping(content = "formatter/sql/DmlDefaultIndentItem")
 public final class DmlDefaultIndentItemLoader implements Content<DmlDefaultIndentItem> {
 
     /**
