@@ -8,14 +8,14 @@
 
 The following syntaxes of ORACLE SQL are supported. I have not checked for compatibility with other RDBMS, sorry!
 
-- DDL
+- DDL Statement
 
   - `CREATE`
   - `ALTER`
   - `DROP`
   - `COMMENT`
 
-- DML
+- DML Statement
   - `SELECT`
   - `INSERT`
   - `UPDATE`
