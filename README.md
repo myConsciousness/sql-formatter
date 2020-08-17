@@ -66,7 +66,7 @@ dependencies {
 }
 ```
 
-### 2. Add an import for [**_SQL Fomratter_**](https://github.com/myConsciousness/json-formatter/blob/master/src/main/java/org/thinkit/formatter/SqlFormatter.java)
+### 2. Add an import for [**_SQL Fomratter_**](https://github.com/myConsciousness/sql-formatter/blob/master/src/main/java/org/thinkit/formatter/SqlFormatter.java)
 
 ```java
 import org.thinkit.formatter.SqlFormatter;
