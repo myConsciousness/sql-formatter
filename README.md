@@ -104,6 +104,15 @@ I have prepared the following unformatted select query for input/output referenc
 
 Let's run `SQL Formatter` with the SQL query of above template as an argument.
 
+```java
+SqlFormatter.of().format(sql);
+```
+
+The output is as follows.
+
+> _Note:_<br>
+> Whitespace in the JSON string before formatting is trimmed during the formatting process, so no pre-processing is required.
+
 ```sql
 select
     t.foo,
@@ -125,11 +134,6 @@ left outer join
         )
 ;
 ```
-
-The output is as follows.
-
-> _Note:_<br>
-> Whitespace in the JSON string before formatting is trimmed during the formatting process, so no pre-processing is required.
 
 ## License
 
