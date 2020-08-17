@@ -82,7 +82,7 @@ dependencies {
 
     implementation 'org.thinkit.common:dev-utils:v1.0.0'
     implementation 'org.thinkit.formatter.common:formatter-commons:v1.0.0-2-g5f99bb5'
-    implementation 'org.thinkit.framework.content:content-framework:1.0-SNAPSHOT'
+    implementation 'org.thinkit.framework.content:content-framework:v1.0.0-2-g563f490'
 }
 
 application {
