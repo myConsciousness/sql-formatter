@@ -35,7 +35,7 @@ The following syntaxes of ORACLE SQL are supported. I have not checked for compa
 <dependency>
   <groupId>org.thinkit.formatter</groupId>
   <artifactId>sql-formatter</artifactId>
-  <version>v1.0.0-1-g22b76d8 </version>
+  <version>v1.0.0-1-g22b76d8</version>
 </dependency>
 
 <servers>
