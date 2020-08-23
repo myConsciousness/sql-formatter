@@ -44,25 +44,7 @@ publishing {
 repositories {
     maven {
         name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/myConsciousness/dev-utils")
-        credentials {
-            username = System.getenv("GITHUB_USER")
-            password = System.getenv("GITHUB_DOWNLOAD_PACKAGE_TOKEN")
-        }
-    }
-
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/myConsciousness/formatter-commons")
-        credentials {
-            username = System.getenv("GITHUB_USER")
-            password = System.getenv("GITHUB_DOWNLOAD_PACKAGE_TOKEN")
-        }
-    }
-
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/myConsciousness/content-framework")
+        url = uri("https://maven.pkg.github.com/myConsciousness/sql-formatter")
         credentials {
             username = System.getenv("GITHUB_USER")
             password = System.getenv("GITHUB_DOWNLOAD_PACKAGE_TOKEN")
@@ -70,6 +52,14 @@ repositories {
     }
 
     jcenter()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = "UTF-8"
 }
 
 dependencies {
@@ -80,21 +70,13 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-    implementation 'org.thinkit.common:dev-utils:v1.0.0'
-    implementation 'org.thinkit.formatter.common:formatter-commons:v1.0.0-2-g5f99bb5'
-    implementation 'org.thinkit.framework.content:content-framework:v1.0.0-2-g563f490'
+    implementation 'org.thinkit.common:dev-utils:v1.0.0-5-g7db55aa'
+    implementation 'org.thinkit.formatter.common:formatter-commons:v1.0.0'
+    implementation 'org.thinkit.framework.content:content-framework:v1.0.1'
 }
 
 application {
     mainClassName = 'org.thinkit.formatter.EntrySqlFormatter'
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-tasks.withType(Javadoc) {
-    options.encoding = "UTF-8"
 }
 
 run {
