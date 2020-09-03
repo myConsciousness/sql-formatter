@@ -62,7 +62,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.thinkit.formatter:sql-formatter:v1.0.0-1-g22b76d8'
+    implementation 'org.thinkit.formatter:sql-formatter:v1.0.4'
 }
 ```
 
