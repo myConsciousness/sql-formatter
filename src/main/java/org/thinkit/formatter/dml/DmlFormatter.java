@@ -110,7 +110,7 @@ public final class DmlFormatter implements Formatter {
             } else if (BiCatalog.contains(StartClause.class, lowercaseToken)) {
                 this.startClause(appender, tokenizer, field, inClauses);
                 inClauses = true;
-            } else if (EndClause.ON.getTag().equals(lastToken) & Delimiter.comma().equals(token)) {
+            } else if (EndClause.ON.getTag().equals(lastToken) && Delimiter.comma().equals(token)) {
                 this.afterOnStatement(appender, field);
             } else if (EndClause.ON.getTag().equals(lowercaseToken)) {
                 this.onStatement(appender, field);
@@ -197,7 +197,7 @@ public final class DmlFormatter implements Formatter {
         }
 
         appender.appendToken();
-        field.toStartLine();
+        field.toNotStartLine();
     }
 
     /**
