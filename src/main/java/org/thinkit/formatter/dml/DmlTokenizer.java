@@ -72,6 +72,11 @@ final class DmlTokenizer implements Tokenizable {
     private DmlTokenizer() {
     }
 
+    /**
+     * 空白の文字列集合を生成し返却します。
+     *
+     * @return 空白の文字列集合
+     */
     private static String getWhitespaces() {
         return BiCatalog.stream(Whitespace.class).collect(Collectors.toList()).toString();
     }
