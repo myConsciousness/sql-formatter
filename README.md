@@ -1,7 +1,5 @@
 # SQL Formatter
 
-![sql-formatter-image](https://user-images.githubusercontent.com/13072231/92102486-a18a2600-ee19-11ea-93b9-e7f77bfabb51.png)
-
 ## What is it?
 
 **_This is a formatter for SQL queries such as DDL and DML._**
