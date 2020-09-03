@@ -71,8 +71,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     implementation 'org.thinkit.common:dev-utils:v1.0.1'
-    implementation 'org.thinkit.formatter.common:formatter-commons:v1.0.0'
-    implementation 'org.thinkit.framework.content:content-framework:v1.0.1'
+    implementation 'org.thinkit.formatter.common:formatter-commons:v1.0.1'
+    implementation 'org.thinkit.framework.content:content-framework:v1.0.2'
+    implementation 'org.thinkit.api.catalog:catalog-api:v1.0.1'
 }
 
 application {
