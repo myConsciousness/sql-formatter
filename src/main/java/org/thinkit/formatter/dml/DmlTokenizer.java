@@ -16,7 +16,9 @@ package org.thinkit.formatter.dml;
 
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
+import org.thinkit.api.catalog.BiCatalog;
 import org.thinkit.formatter.common.Tokenizable;
 import org.thinkit.formatter.common.catalog.Whitespace;
 
@@ -39,7 +41,7 @@ final class DmlTokenizer implements Tokenizable {
     /**
      * 区切り文字
      */
-    private static final String TOKEN_DELIMITER = ";()+*/-=<>'`\"[]," + Whitespace.stringify();
+    private static final String TOKEN_DELIMITER = ";()+*/-=<>'`\"[]," + getWhitespaces();
 
     /**
      * トークナイザー
@@ -68,6 +70,10 @@ final class DmlTokenizer implements Tokenizable {
      * デフォルトコンストラクタ
      */
     private DmlTokenizer() {
+    }
+
+    private static String getWhitespaces() {
+        return BiCatalog.stream(Whitespace.class).collect(Collectors.toList()).toString();
     }
 
     /**

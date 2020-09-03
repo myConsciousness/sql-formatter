@@ -14,7 +14,7 @@
 
 package org.thinkit.formatter.catalog.ddl;
 
-import org.thinkit.common.catalog.Catalog;
+import org.thinkit.api.catalog.BiCatalog;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum LogicalExpression implements Catalog<LogicalExpression> {
+public enum LogicalExpression implements BiCatalog<LogicalExpression, String> {
 
     /**
      * {@code is} 式
@@ -41,8 +41,8 @@ public enum LogicalExpression implements Catalog<LogicalExpression> {
     private final int code;
 
     /**
-     * 式
+     * タグ
      */
     @Getter
-    private final String expression;
+    private final String tag;
 }

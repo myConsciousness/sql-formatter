@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.thinkit.common.catalog.Catalog;
+import org.thinkit.api.catalog.Catalog;
 import org.thinkit.formatter.common.catalog.IndentType;
 import org.thinkit.formatter.content.dml.entity.DmlDefaultIndentItem;
 import org.thinkit.framework.content.Attribute;

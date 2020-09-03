@@ -14,6 +14,7 @@
 
 package org.thinkit.formatter.dml;
 
+import org.thinkit.api.catalog.BiCatalog;
 import org.thinkit.common.catalog.Delimiter;
 import org.thinkit.common.catalog.Parenthesis;
 import org.thinkit.formatter.SqlFormatter;
@@ -104,16 +105,16 @@ public final class DmlFormatter implements Formatter {
             String lowercaseToken = tokenizer.getLowercaseToken();
             String lastToken = tokenizer.getLastToken();
 
-            if (DmlStatement.contains(lowercaseToken)) {
+            if (BiCatalog.contains(DmlStatement.class, lowercaseToken)) {
                 this.dmlStatement(appender, tokenizer, startParenthesis, field);
-            } else if (StartClause.contains(lowercaseToken)) {
+            } else if (BiCatalog.contains(StartClause.class, lowercaseToken)) {
                 this.startClause(appender, tokenizer, field, inClauses);
                 inClauses = true;
-            } else if (EndClause.ON.getClause().equals(lastToken) & Delimiter.comma().equals(token)) {
+            } else if (EndClause.ON.getTag().equals(lastToken) & Delimiter.comma().equals(token)) {
                 this.afterOnStatement(appender, field);
-            } else if (EndClause.ON.getClause().equals(lowercaseToken)) {
+            } else if (EndClause.ON.getTag().equals(lowercaseToken)) {
                 this.onStatement(appender, field);
-            } else if (EndClause.contains(lowercaseToken)) {
+            } else if (BiCatalog.contains(EndClause.class, lowercaseToken)) {
                 this.endClause(appender, tokenizer, field, inClauses);
                 inClauses = false;
             } else if (field.isNewline() && Delimiter.comma().equals(token)) {
@@ -122,13 +123,13 @@ public final class DmlFormatter implements Formatter {
                 this.startParenthesis(appender, tokenizer, function, field, startParenthesis);
             } else if (Parenthesis.end().equals(token)) {
                 this.endParenthesis(appender, function, field, startParenthesis);
-            } else if (EndClause.VALUES.getClause().equals(lowercaseToken)) {
+            } else if (EndClause.VALUES.getTag().equals(lowercaseToken)) {
                 this.valuesClause(appender, field);
-            } else if (LogicalExpression.contains(lowercaseToken)
-                    && !LogicalExpression.CASE.getExpression().equals(lowercaseToken)) {
+            } else if (BiCatalog.contains(LogicalExpression.class, lowercaseToken)
+                    && !LogicalExpression.CASE.getTag().equals(lowercaseToken)) {
                 this.logicalExceptCase(appender, tokenizer, field);
-            } else if (Quantifier.BETWEEN.getQuantifier().equals(lastToken)
-                    && LogicalExpression.AND.getExpression().equals(lowercaseToken)) {
+            } else if (Quantifier.BETWEEN.getTag().equals(lastToken)
+                    && LogicalExpression.AND.getTag().equals(lowercaseToken)) {
                 this.logicalAfterBetween(appender, field);
             } else if (this.isWhitespace(token)) {
                 this.whitespace(appender, field);
@@ -155,7 +156,7 @@ public final class DmlFormatter implements Formatter {
 
         appender.appendToken();
 
-        if (DmlStatement.SELECT.getStatement().equals(tokenizer.getLowercaseToken())) {
+        if (DmlStatement.SELECT.getTag().equals(tokenizer.getLowercaseToken())) {
             appender.incrementIndent().appendNewLine();
             startParenthesis.push();
             field.push().toNewline().toStartLine();
@@ -163,7 +164,7 @@ public final class DmlFormatter implements Formatter {
 
             field.toNotStartLine();
 
-            if (DmlStatement.UPDATE.getStatement().equals(tokenizer.getLowercaseToken())) {
+            if (DmlStatement.UPDATE.getTag().equals(tokenizer.getLowercaseToken())) {
                 appender.appendNewLine();
                 field.toStartLine();
             }
@@ -188,7 +189,7 @@ public final class DmlFormatter implements Formatter {
             boolean inClauses) {
 
         if (!inClauses) {
-            if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
+            if (EndClause.ON.getTag().equals(tokenizer.getLastToken())) {
                 appender.decrementIndent();
             }
 
@@ -215,7 +216,7 @@ public final class DmlFormatter implements Formatter {
             boolean inClauses) {
 
         if (!inClauses) {
-            if (EndClause.ON.getClause().equals(tokenizer.getLastToken())) {
+            if (EndClause.ON.getTag().equals(tokenizer.getLastToken())) {
                 appender.decrementIndent();
             }
 
@@ -224,15 +225,15 @@ public final class DmlFormatter implements Formatter {
 
         final String lowercaseToken = tokenizer.getLowercaseToken();
 
-        if (!EndClause.UNION.getClause().equals(lowercaseToken)) {
+        if (!EndClause.UNION.getTag().equals(lowercaseToken)) {
             appender.incrementIndent();
         }
 
         appender.appendToken().appendNewLine();
         field.toStartLine();
 
-        if (EndClause.BY.getClause().equals(lowercaseToken) || EndClause.SET.getClause().equals(lowercaseToken)
-                || EndClause.FROM.getClause().equals(lowercaseToken)) {
+        if (EndClause.BY.getTag().equals(lowercaseToken) || EndClause.SET.getTag().equals(lowercaseToken)
+                || EndClause.FROM.getTag().equals(lowercaseToken)) {
             field.toNewline();
         } else {
             field.toNotNewline();
@@ -359,7 +360,7 @@ public final class DmlFormatter implements Formatter {
     private void logicalExceptCase(@NonNull DmlAppender appender, @NonNull Tokenizable tokenizer,
             @NonNull FieldFixer field) {
 
-        if (LogicalExpression.END.getExpression().equals(tokenizer.getLowercaseToken())) {
+        if (LogicalExpression.END.getTag().equals(tokenizer.getLowercaseToken())) {
             appender.decrementIndent();
         }
 
@@ -411,13 +412,13 @@ public final class DmlFormatter implements Formatter {
 
         appender.appendToken();
 
-        if (DmlStatement.INSERT.getStatement().equals(tokenizer.getLastToken())) {
+        if (DmlStatement.INSERT.getTag().equals(tokenizer.getLastToken())) {
             appender.appendNewLine();
             field.toStartLine();
         } else {
             field.toNotStartLine();
 
-            if (LogicalExpression.CASE.getExpression().equals(tokenizer.getLowercaseToken())) {
+            if (LogicalExpression.CASE.getTag().equals(tokenizer.getLowercaseToken())) {
                 appender.incrementIndent();
             }
         }
@@ -461,7 +462,8 @@ public final class DmlFormatter implements Formatter {
         final char start = token.charAt(0);
         final boolean isIdentifier = Character.isJavaIdentifierStart(start) || '"' == start;
 
-        return isIdentifier && !LogicalExpression.contains(token) && !EndClause.contains(token)
-                && !Quantifier.contains(token) && !DmlStatement.contains(token);
+        return isIdentifier && !BiCatalog.contains(LogicalExpression.class, token)
+                && !BiCatalog.contains(EndClause.class, token) && !BiCatalog.contains(Quantifier.class, token)
+                && !BiCatalog.contains(DmlStatement.class, token);
     }
 }

@@ -14,7 +14,7 @@
 
 package org.thinkit.formatter.catalog.ddl;
 
-import org.thinkit.common.catalog.Catalog;
+import org.thinkit.api.catalog.BiCatalog;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum DdlTokenDelimiter implements Catalog<DdlTokenDelimiter> {
+public enum DdlTokenDelimiter implements BiCatalog<DdlTokenDelimiter, String> {
 
     /**
      * {@code create table} のトークン区切り文字
@@ -51,8 +51,8 @@ public enum DdlTokenDelimiter implements Catalog<DdlTokenDelimiter> {
     private final int code;
 
     /**
-     * 区切り文字
+     * タグ
      */
     @Getter
-    private final String delimiter;
+    private final String tag;
 }

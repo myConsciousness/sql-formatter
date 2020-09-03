@@ -14,10 +14,9 @@
 
 package org.thinkit.formatter.catalog.ddl;
 
-import org.thinkit.common.catalog.Catalog;
+import org.thinkit.api.catalog.BiCatalog;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -28,7 +27,7 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum StartClause implements Catalog<StartClause> {
+public enum StartClause implements BiCatalog<StartClause, String> {
     /**
      * {@code add} 句
      */
@@ -55,28 +54,8 @@ public enum StartClause implements Catalog<StartClause> {
     private final int code;
 
     /**
-     * 句
+     * タグ
      */
     @Getter
-    private final String clause;
-
-    /**
-     * 引数として渡された {@code token} に格納された文字列が {@link StartClause} に定義されているか判定します。
-     *
-     * @param token 判定対象のトークン
-     * @return 引数として渡された {@code token} に格納された文字列が {@link StartClause} に定義されている場合は
-     *         {@code true} 、それ以外は {@code false}
-     *
-     * @exception NullPointerException 引数として {@code null} が渡された場合
-     */
-    public static boolean contains(@NonNull String token) {
-
-        for (StartClause clause : StartClause.values()) {
-            if (clause.getClause().equals(token)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    private final String tag;
 }

@@ -82,11 +82,11 @@ public final class DdlFormatter implements Formatter {
         final String trimmedSql = sql.trim();
         final String lowercaseSql = sql.toLowerCase();
 
-        if (lowercaseSql.startsWith(DdlStatement.CREATE_TABLE.getStatement())) {
+        if (lowercaseSql.startsWith(DdlStatement.CREATE_TABLE.getTag())) {
             return CreateTableFormatter.withIndent(this.indent).format(sql);
-        } else if (lowercaseSql.startsWith(DdlStatement.ALTER_TABLE.getStatement())) {
+        } else if (lowercaseSql.startsWith(DdlStatement.ALTER_TABLE.getTag())) {
             return AlterTableFormatter.withIndent(this.indent).format(sql);
-        } else if (lowercaseSql.startsWith(DdlStatement.COMMENT_ON.getStatement())) {
+        } else if (lowercaseSql.startsWith(DdlStatement.COMMENT_ON.getTag())) {
             return CommentOnFormatter.withIndent(this.indent).format(sql);
         }
 

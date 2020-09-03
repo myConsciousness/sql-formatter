@@ -96,14 +96,14 @@ final class AlterTableFormatter implements Formatter {
                 }
             } else if (tokenizer.isBreak()) {
 
-                if (!StartClause.COLUMN.getClause().equals(tokenizer.getLowercaseToken())) {
+                if (!StartClause.COLUMN.getTag().equals(tokenizer.getLowercaseToken())) {
                     appender.appendNewline();
                 }
 
                 appender.appendToken();
 
-                if (!StartClause.RENAME.getClause().equals(tokenizer.getLowercaseToken())
-                        && !DdlStatement.DROP.getStatement().equals(tokenizer.getLowercaseToken())) {
+                if (!StartClause.RENAME.getTag().equals(tokenizer.getLowercaseToken())
+                        && !DdlStatement.DROP.getTag().equals(tokenizer.getLowercaseToken())) {
                     appender.incrementIndent().appendNewline().decrementIndent();
                 }
             } else {

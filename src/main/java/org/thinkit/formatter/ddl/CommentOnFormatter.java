@@ -93,8 +93,8 @@ final class CommentOnFormatter implements Formatter {
 
         while (tokenizer.next()) {
 
-            if (StartClause.COLUMN.getClause().equals(tokenizer.getLowercaseToken())
-                    || LogicalExpression.IS.getExpression().equals(tokenizer.getLowercaseToken())) {
+            if (StartClause.COLUMN.getTag().equals(tokenizer.getLowercaseToken())
+                    || LogicalExpression.IS.getTag().equals(tokenizer.getLowercaseToken())) {
                 appender.appendNewline().appendToken();
                 startLine = true;
                 newline = true;

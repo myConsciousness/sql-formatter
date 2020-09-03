@@ -17,6 +17,7 @@ package org.thinkit.formatter.ddl;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.thinkit.api.catalog.BiCatalog;
 import org.thinkit.formatter.catalog.ddl.Constraint;
 import org.thinkit.formatter.catalog.ddl.DdlStatement;
 import org.thinkit.formatter.catalog.ddl.DdlTokenDelimiter;
@@ -80,12 +81,12 @@ final class DdlTokenizer implements Tokenizable {
 
         final String lowercaseSql = sql.toLowerCase();
 
-        if (lowercaseSql.startsWith(DdlStatement.CREATE_TABLE.getStatement())) {
-            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.CREATE_TABLE.getDelimiter(), true);
-        } else if (lowercaseSql.startsWith(DdlStatement.ALTER_TABLE.getStatement())) {
-            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.ALTER_TABLE.getDelimiter(), true);
-        } else if (lowercaseSql.startsWith(DdlStatement.COMMENT_ON.getStatement())) {
-            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.COMMENT_ON.getDelimiter(), true);
+        if (lowercaseSql.startsWith(DdlStatement.CREATE_TABLE.getTag())) {
+            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.CREATE_TABLE.getTag(), true);
+        } else if (lowercaseSql.startsWith(DdlStatement.ALTER_TABLE.getTag())) {
+            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.ALTER_TABLE.getTag(), true);
+        } else if (lowercaseSql.startsWith(DdlStatement.COMMENT_ON.getTag())) {
+            this.tokenizer = new StringTokenizer(sql, DdlTokenDelimiter.COMMENT_ON.getTag(), true);
         } else {
             throw new IllegalArgumentException(String.format("Unsupported DDL query was given: %s", sql));
         }
@@ -138,9 +139,11 @@ final class DdlTokenizer implements Tokenizable {
     }
 
     public boolean isBreak() {
-        return DdlStatement.DROP.getStatement().equals(this.lowercaseToken) || StartClause.contains(this.lowercaseToken)
-                || (!EndClause.TO.getClause().equals(this.lowercaseToken) && EndClause.contains(this.lowercaseToken))
-                || Constraint.contains(this.lowercaseToken);
+        return DdlStatement.DROP.getTag().equals(this.lowercaseToken)
+                || BiCatalog.contains(StartClause.class, this.lowercaseToken)
+                || (!EndClause.TO.getTag().equals(this.lowercaseToken)
+                        && BiCatalog.contains(EndClause.class, this.lowercaseToken))
+                || BiCatalog.contains(Constraint.class, this.lowercaseToken);
 
     }
 

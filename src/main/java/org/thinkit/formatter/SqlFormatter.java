@@ -85,10 +85,9 @@ public class SqlFormatter implements Formatter {
 
         final String trimmedSql = sql.trim().toLowerCase();
 
-        if (trimmedSql.startsWith(DmlStatement.SELECT.getStatement())
-                || trimmedSql.startsWith(DmlStatement.INSERT.getStatement())
-                || trimmedSql.startsWith(DmlStatement.UPDATE.getStatement())
-                || trimmedSql.startsWith(DmlStatement.DELETE.getStatement())) {
+        if (trimmedSql.startsWith(DmlStatement.SELECT.getTag()) || trimmedSql.startsWith(DmlStatement.INSERT.getTag())
+                || trimmedSql.startsWith(DmlStatement.UPDATE.getTag())
+                || trimmedSql.startsWith(DmlStatement.DELETE.getTag())) {
             return DmlFormatter.withIndent(this.indent).format(sql);
         }
 

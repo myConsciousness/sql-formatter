@@ -14,10 +14,9 @@
 
 package org.thinkit.formatter.catalog.dml;
 
-import org.thinkit.common.catalog.Catalog;
+import org.thinkit.api.catalog.BiCatalog;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -28,7 +27,7 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum LogicalExpression implements Catalog<LogicalExpression> {
+public enum LogicalExpression implements BiCatalog<LogicalExpression, String> {
 
     /**
      * {@code when} 式
@@ -67,28 +66,8 @@ public enum LogicalExpression implements Catalog<LogicalExpression> {
     private final int code;
 
     /**
-     * 式
+     * タグ
      */
     @Getter
-    private final String expression;
-
-    /**
-     * 引数として渡された {@code token} に格納された文字列が {@link LogicalExpression} に定義されているか判定します。
-     *
-     * @param token 判定対象のトークン
-     * @return 引数として渡された {@code token} に格納された文字列が {@link LogicalExpression}
-     *         に定義されている場合は {@code true} 、それ以外は {@code false}
-     *
-     * @exception NullPointerException 引数として {@code null} が渡された場合
-     */
-    public static boolean contains(@NonNull String token) {
-
-        for (LogicalExpression expression : LogicalExpression.values()) {
-            if (expression.getExpression().equals(token)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    private final String tag;
 }

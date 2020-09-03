@@ -14,7 +14,7 @@
 
 package org.thinkit.formatter.catalog.ddl;
 
-import org.thinkit.common.catalog.Catalog;
+import org.thinkit.api.catalog.BiCatalog;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum DdlStatement implements Catalog<DdlStatement> {
+public enum DdlStatement implements BiCatalog<DdlStatement, String> {
 
     /**
      * {@code create table} ステートメント
@@ -53,7 +53,6 @@ public enum DdlStatement implements Catalog<DdlStatement> {
      * {@code create drop} ステートメント
      */
     DROP(4, "drop");
-    ;
 
     /**
      * コード値
@@ -62,8 +61,8 @@ public enum DdlStatement implements Catalog<DdlStatement> {
     private final int code;
 
     /**
-     * ステートメント
+     * タグ
      */
     @Getter
-    private final String statement;
+    private final String tag;
 }
